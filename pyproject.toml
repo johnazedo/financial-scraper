@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "ws-funds-explorer"
+version = "0.1.0"
+description = ""
+authors = ["João Pedro Limão <jplimao077@gmail.com>"]
+packages = [
+    {include = "main"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+beautifulsoup4 = "^4.13.4"
+requests = "^2.32.5"
+selenium = "^4.35.0"
+requests-html = "^0.10.0"
+lxml = {extras = ["html_clean"], version = "^6.0.1"}
+lxml-html-clean = "^0.4.2"
+pandas = "^2.3.2"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+get_funds = "main.main:get_funds"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
