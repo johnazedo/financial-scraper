@@ -5,8 +5,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
@@ -84,12 +82,3 @@ class WSFundsExplorer():
             writer.writerow(self.heads)
             Log.log(tag, "Write rows into file")
             writer.writerows(self.rows)
-        
-
-
-        
-
-
-
-
-
