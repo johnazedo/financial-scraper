@@ -1,8 +1,8 @@
+import os
 
 URL: str = "https://www.fundsexplorer.com.br/ranking"
-HTTP_SUCCESS_CODE: int = 200
-DRIVER_WAITING_SECONDS: int = 30
 TIME_TO_SLEEP: int = 10
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class Log():

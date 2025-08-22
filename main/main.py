@@ -1,13 +1,14 @@
-from requests import Response
-import requests
-from bs4 import BeautifulSoup, Tag
-from main.settings import URL, HTTP_SUCCESS_CODE, Log, TIME_TO_SLEEP
+import time
+import csv
+import os
+from datetime import datetime
+from bs4 import BeautifulSoup
+from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-import time
 
 
 def get_funds():
@@ -20,6 +21,7 @@ class WSFundsExplorer():
         self.config_step()
         self.get_page_source_code()
         self.read_source_code_and_get_data()
+        self.transform_data_into_csv()
 
     def config_step(self):
         Log.log("CONFIG_STEP", "Start")
@@ -66,7 +68,23 @@ class WSFundsExplorer():
         for tr in body_rows:
             cells = [td.get_text(strip=True) for td in tr.select("td,th")]
             self.rows.append(cells)
-        Log.log(tag, f"Load {self.rows.count} itens")
+        Log.log(tag, f"Load {len(self.rows)} itens")
+
+    def transform_data_into_csv(self):
+        tag = "TRANSFORM_DATA_INTO_CSV"
+        Log.log(tag, "Start")
+
+        today = datetime.today().strftime("%d-%m-%Y")
+        path = os.path.join(BASE_DIR, f"../data/funds-{today}.csv")
+        Log.log(tag, f"Get path: {path}")
+
+        with open(path, "w", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            Log.log(tag, "Write header into file")
+            writer.writerow(self.heads)
+            Log.log(tag, "Write rows into file")
+            writer.writerows(self.rows)
+        
 
 
         
