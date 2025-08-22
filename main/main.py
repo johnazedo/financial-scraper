@@ -19,6 +19,7 @@ class WSFundsExplorer():
     def __init__(self):
         self.config_step()
         self.get_page_source_code()
+        self.read_source_code_and_get_data()
 
     def config_step(self):
         Log.log("CONFIG_STEP", "Start")
@@ -47,6 +48,26 @@ class WSFundsExplorer():
     def read_source_code_and_get_data(self):
         tag = "READ_SOURCE_CODE_AND_GET_DATA"
         Log.log(tag, "Start")
+        self.rows = []
+
+        soup = BeautifulSoup(self.source_code, "html.parser")
+        table = soup.select_one("table")
+        if not table:
+            return None
+
+        Log.log(tag, "Get header from table")
+        self.heads = [th.get_text(strip=True) for th in table.select("thead th")]
+        if not self.heads:
+            return None
+        Log.log(tag, "Load table header")
+        
+        Log.log(tag, "Get information from table")
+        body_rows = table.select("tbody tr")
+        for tr in body_rows:
+            cells = [td.get_text(strip=True) for td in tr.select("td,th")]
+            self.rows.append(cells)
+        Log.log(tag, f"Load {self.rows.count} itens")
+
 
         
 

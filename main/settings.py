@@ -6,7 +6,6 @@ TIME_TO_SLEEP: int = 10
 
 
 class Log():
-
     def log(tag: str, msg: str):
         print(f'{tag}: {msg}')
     
