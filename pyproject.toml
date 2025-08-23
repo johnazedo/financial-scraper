@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ws-funds-explorer"
+name = "web-scraping-financial"
 version = "0.1.0"
 description = ""
 authors = ["João Pedro Limão <jplimao077@gmail.com>"]
