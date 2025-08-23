@@ -17,11 +17,11 @@ class Log():
         else:
             return f"[No Class] {caller_function.upper()}"
 
-    def log(tag: str, msg: str):
+    def log(msg: str):
         caller = Log._get_caller_name()
         print(f'{caller}: {msg}')
     
-    def log_error(tag: str, msg: str, error: Exception):
+    def log_error(msg: str, error: Exception):
         caller = Log._get_caller_name()
         print(f'{caller}: {msg}')
         print(f'Root cause: {error}')
