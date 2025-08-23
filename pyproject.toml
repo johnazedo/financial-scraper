@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["João Pedro Limão <jplimao077@gmail.com>"]
 packages = [
-    {include = "main"}
+    {include = "main"},
+    {include = "services"}
 ]
 
 [tool.poetry.dependencies]
