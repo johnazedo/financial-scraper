@@ -21,7 +21,6 @@ class StatusInvestService(Service):
             "download.directory_upgrade": True,
             "safebrowsing.enabled": False,
             "safebrowsing.disable_download_protection": True
-
         }
         options.add_experimental_option("prefs", prefs)
         self.driver = webdriver.Chrome(options=options)
@@ -33,29 +32,13 @@ class StatusInvestService(Service):
         try:
             time.sleep(10)
 
-            Log.log("Search close alert")
-            close_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-close"))
-            )
-
-            Log.log("Click close button")
-            close_button.click()
-
-            Log.log("Search close ads banner")
-            close_ads_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//a[text()='×']"))
-            )
-
-            Log.log("Click close button")
-            close_ads_button.click()
-
             Log.log("Get search button")
             search_button = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, f"//button[@data-tooltip='{self._search_button_data_tooltip}']"))
             )
 
             Log.log("Click search button")
-            search_button.click()
+            self.driver.execute_script("arguments[0].click();", search_button)
 
             Log.log("Get download button")
             download_button = WebDriverWait(self.driver, 10).until(
@@ -64,7 +47,6 @@ class StatusInvestService(Service):
 
             Log.log("Click download button")
             self.driver.execute_script("arguments[0].click();", download_button)
-
 
             timeout, found = 30, False
             for _ in range(timeout):
