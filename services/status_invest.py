@@ -10,7 +10,6 @@ import os, time
 class StatusInvestService(Service):
 
     _search_button_data_tooltip = "Clique para fazer a busca com base nos valores informados"
-    _search_ahref_data_class = "btn-download.btn.btn-main-green.btn-small.waves-effect.waves-light"
     _download_dir = f"{BASE_DIR}/../downloads/"
     
     def config_step(self):
@@ -20,7 +19,9 @@ class StatusInvestService(Service):
             "download.default_directory": self._download_dir,
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
-            "safebrowsing.enabled": True
+            "safebrowsing.enabled": False,
+            "safebrowsing.disable_download_protection": True
+
         }
         options.add_experimental_option("prefs", prefs)
         self.driver = webdriver.Chrome(options=options)
@@ -28,22 +29,41 @@ class StatusInvestService(Service):
     def make_request(self):
         Log.log("Start")
         self.driver.get("https://statusinvest.com.br/acoes/busca-avancada")
-        
+
         try:
+            time.sleep(10)
+
+            Log.log("Search close alert")
+            close_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-close"))
+            )
+
+            Log.log("Click close button")
+            close_button.click()
+
+            Log.log("Search close ads banner")
+            close_ads_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//a[text()='×']"))
+            )
+
+            Log.log("Click close button")
+            close_ads_button.click()
+
             Log.log("Get search button")
             search_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clicked((By.XPATH, f"//button[@data-tooltip='{self._search_button_data_tooltip}']"))
+                EC.element_to_be_clickable((By.XPATH, f"//button[@data-tooltip='{self._search_button_data_tooltip}']"))
             )
+
             Log.log("Click search button")
             search_button.click()
 
             Log.log("Get download button")
             download_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clicked((By.CSS_SELECTOR, f"a.{self._search_ahref_data_class}"))
+                EC.element_to_be_clickable((By.CSS_SELECTOR, f"a.btn-download"))
             )
 
             Log.log("Click download button")
-            download_button.click()
+            self.driver.execute_script("arguments[0].click();", download_button)
 
 
             timeout, found = 30, False
@@ -55,7 +75,7 @@ class StatusInvestService(Service):
                     break
                 time.sleep(1)
             if not found:
-                pass
+                Log.log("Erro to found .csv into downloads folder!")
 
         except Exception as e:
             Log.log_error("Error when try to download csv", e)
