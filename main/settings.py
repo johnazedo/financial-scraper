@@ -5,6 +5,7 @@ import inspect
 URL: str = "https://www.fundsexplorer.com.br/ranking"
 TIME_TO_SLEEP: int = 10
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR_DOWNLOAD = os.path.join(os.path.dirname(BASE_DIR), "downloads")
 
 
 class Log():
@@ -31,11 +32,11 @@ class Selenium():
 
     @staticmethod
     def get_options() -> Options:
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-        return chrome_options
+        options = Options()
+        # options.add_argument("--headless=new")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+        return options

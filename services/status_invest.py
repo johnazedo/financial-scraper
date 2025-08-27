@@ -1,5 +1,5 @@
 from services.service import Service
-from main.settings import Log, Selenium, BASE_DIR
+from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,20 +9,18 @@ import os, time
 
 class StatusInvestService(Service):
 
-    _search_button_data_tooltip = "Clique para fazer a busca com base nos valores informados"
-    _download_dir = f"{BASE_DIR}/../downloads/"
+    _SEARCH_BUTTON_DATA_TOOLTIP = "Clique para fazer a busca com base nos valores informados"
     
     def config_step(self):
         Log.log("Start")
         options = Selenium.get_options()
         prefs = {
-            "download.default_directory": self._download_dir,
+            "download.default_directory": BASE_DIR_DOWNLOAD,
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
-            "safebrowsing.enabled": False,
-            "safebrowsing.disable_download_protection": True
+            "safebrowsing.enabled": True,
         }
-        options.add_experimental_option("prefs", prefs)
+        options.add_experimental_option('prefs', prefs)
         self.driver = webdriver.Chrome(options=options)
     
     def make_request(self):
@@ -30,11 +28,9 @@ class StatusInvestService(Service):
         self.driver.get("https://statusinvest.com.br/acoes/busca-avancada")
 
         try:
-            time.sleep(10)
-
             Log.log("Get search button")
             search_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, f"//button[@data-tooltip='{self._search_button_data_tooltip}']"))
+                EC.element_to_be_clickable((By.XPATH, f"//button[@data-tooltip='{self._SEARCH_BUTTON_DATA_TOOLTIP}']"))
             )
 
             Log.log("Click search button")
@@ -48,9 +44,11 @@ class StatusInvestService(Service):
             Log.log("Click download button")
             self.driver.execute_script("arguments[0].click();", download_button)
 
+            Log.log(f"Save file in {BASE_DIR_DOWNLOAD}")
+
             timeout, found = 30, False
             for _ in range(timeout):
-                files = [f for f in os.listdir(self._download_dir) if f.endswith(".csv")]
+                files = [f for f in os.listdir(BASE_DIR_DOWNLOAD) if f.endswith(".csv")]
                 if files:
                     Log.log("Download completed!")
                     found = True
