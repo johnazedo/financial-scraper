@@ -3,7 +3,7 @@ import csv
 import os
 from datetime import datetime
 from bs4 import BeautifulSoup
-from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR
+from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR, Selenium
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
@@ -13,14 +13,8 @@ class FundsExplorerService(Service):
 
     def config_step(self):
         Log.log("Start")
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-        self.driver = webdriver.Chrome(options=chrome_options)
+        options = Selenium.get_options()
+        self.driver = webdriver.Chrome(options=options)
 
     def make_request(self):
         Log.log("Start")

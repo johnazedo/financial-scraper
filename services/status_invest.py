@@ -1,5 +1,5 @@
 from services.service import Service
-from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD
+from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,22 +10,17 @@ import os, time
 class StatusInvestService(Service):
 
     _SEARCH_BUTTON_DATA_TOOLTIP = "Clique para fazer a busca com base nos valores informados"
+    _URL = "https://statusinvest.com.br/acoes/busca-avancada"
+    _CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"
     
     def config_step(self):
         Log.log("Start")
         options = Selenium.get_options()
-        prefs = {
-            "download.default_directory": BASE_DIR_DOWNLOAD,
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": True,
-        }
-        options.add_experimental_option('prefs', prefs)
         self.driver = webdriver.Chrome(options=options)
     
     def make_request(self):
         Log.log("Start")
-        self.driver.get("https://statusinvest.com.br/acoes/busca-avancada")
+        self.driver.get(self._URL)
 
         try:
             Log.log("Get search button")
@@ -38,7 +33,7 @@ class StatusInvestService(Service):
 
             Log.log("Get download button")
             download_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, f"a.btn-download"))
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "a.btn-download"))
             )
 
             Log.log("Click download button")
@@ -46,20 +41,15 @@ class StatusInvestService(Service):
 
             Log.log(f"Save file in {BASE_DIR_DOWNLOAD}")
 
-            timeout, found = 30, False
-            for _ in range(timeout):
-                files = [f for f in os.listdir(BASE_DIR_DOWNLOAD) if f.endswith(".csv")]
-                if files:
-                    Log.log("Download completed!")
-                    found = True
-                    break
-                time.sleep(1)
-            if not found:
+            timeout = 30
+            is_file_downloaded = check_if_file_was_downloaded(self._CSV_ORIGIN_FILENAME, timeout)
+            if is_file_downloaded:
+                Log.log("Download completed!")
+            else:
                 Log.log("Erro to found .csv into downloads folder!")
-
+                
         except Exception as e:
             Log.log_error("Error when try to download csv", e)
-
         finally:
             self.driver.quit()
 
