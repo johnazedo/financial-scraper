@@ -29,7 +29,6 @@ class FundsExplorerService(Service):
             self.driver.quit()
     
     def read_page_and_get_data(self):
-        tag = "READ_SOURCE_CODE_AND_GET_DATA"
         Log.log("Start")
         self.rows = []
 

@@ -6,6 +6,7 @@ URL: str = "https://www.fundsexplorer.com.br/ranking"
 TIME_TO_SLEEP: int = 10
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR_DOWNLOAD = os.path.join(os.path.dirname(BASE_DIR), "downloads")
+HTTP_SUCCESS_CODE = 200
 
 
 class Log():
