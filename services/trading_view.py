@@ -43,8 +43,12 @@ class TradingViewService(Service):
             name = name_tag.get_text(strip=True)
 
             prefix = "/markets/stocks-brazil/sectorandindustry-sector/"
-            department_tag = self.page.select_one(f'a[href^="{prefix}"]')  
-            department = department_tag.get_text(strip=True)
+            department_tag = self.page.select_one(f'a[href^="{prefix}"]')
+            
+            if department_tag == None:
+                department = ""
+            else:
+                department = department_tag.get_text(strip=True)
 
             self.lines.append(f"{self.stock};{name};{department};{image}\n")
 
