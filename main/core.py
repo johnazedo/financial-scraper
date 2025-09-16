@@ -9,7 +9,7 @@ class FinalCSV():
             self.get_data_from_status_invest()
             self.get_data_from_market_data()
             self.get_data_from_trading_view()
-        except Exception as e:
+        except FileNotFoundError as e:
             Log.log_error("Unable to open file", e)
 
     def get_data_from_status_invest(self) -> None:

@@ -3,7 +3,7 @@ import csv
 import os
 from datetime import datetime
 from bs4 import BeautifulSoup
-from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR, Selenium
+from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR, Selenium, update_download_history
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
@@ -52,9 +52,9 @@ class FundsExplorerService(Service):
 
     def transform_data_into_csv(self):
         Log.log("Start")
-
+        filename = f"funds-{today}.csv"
         today = datetime.today().strftime("%d-%m-%Y")
-        path = os.path.join(BASE_DIR, f"../data/funds-{today}.csv")
+        path = os.path.join(BASE_DIR, f"../data/{filename}")
         Log.log(f"Get path: {path}")
 
         with open(path, "w", encoding="utf-8") as f:
@@ -63,3 +63,5 @@ class FundsExplorerService(Service):
             writer.writerow(self.heads)
             Log.log("Write rows into file")
             writer.writerows(self.rows)
+        
+        update_download_history(filename)

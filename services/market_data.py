@@ -1,5 +1,5 @@
 from services.service import Service
-from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded
+from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded, update_download_history
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -41,6 +41,7 @@ class MarketDataService(Service):
         except Exception as e:
             Log.log_error("Error when try to download csv", e)
         finally:
+            update_download_history(self._CSV_ORIGIN_FILENAME)
             self.driver.quit()
 
     def read_page_and_get_data(self):

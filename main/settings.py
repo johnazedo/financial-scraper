@@ -1,6 +1,8 @@
 import os, time
+from datetime import datetime
 from selenium.webdriver.chrome.options import Options
 import inspect
+from pathlib import Path
 
 URL: str = "https://www.fundsexplorer.com.br/ranking"
 TIME_TO_SLEEP: int = 10
@@ -60,3 +62,23 @@ def check_if_file_was_downloaded(filename: str, timeout: int) -> bool:
         time.sleep(1)
 
     return found
+
+
+def update_download_history(filename: str):
+    FILENAME = f"{BASE_DIR_DOWNLOAD}/download_history.csv"
+    HEADER = "NAME;DATE;TIME"
+    file_path = Path(FILENAME)
+    edit_mode = 'a'
+    put_header = False
+    if not file_path.exists():
+        edit_mode = 'w'
+        put_header = True
+
+    with open(FILENAME, edit_mode) as file:
+        if put_header:
+            file.write(HEADER)
+        
+        date = datetime.today().strftime('%Y-%m-%d')
+        time = datetime.today().strftime('%H:%M')
+        file.write(f"{filename};{date};{time}")
+    
