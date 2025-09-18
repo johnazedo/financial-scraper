@@ -23,6 +23,7 @@ pandas = "^2.3.2"
 [tool.poetry.scripts]
 get_funds = "main.main:get_funds"
 get_stocks = "main.main:get_stocks"
+generate_final_csv = "main.main:generate_final_csv"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

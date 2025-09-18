@@ -8,6 +8,7 @@ URL: str = "https://www.fundsexplorer.com.br/ranking"
 TIME_TO_SLEEP: int = 10
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR_DOWNLOAD = os.path.join(os.path.dirname(BASE_DIR), "downloads")
+BASE_DIR_DATA = os.path.join(os.path.dirname(BASE_DIR), "data")
 HTTP_SUCCESS_CODE = 200
 
 
@@ -66,7 +67,7 @@ def check_if_file_was_downloaded(filename: str, timeout: int) -> bool:
 
 def update_download_history(filename: str):
     FILENAME = f"{BASE_DIR_DOWNLOAD}/download_history.csv"
-    HEADER = "NAME;DATE;TIME"
+    HEADER = "NAME;DATE;TIME\n"
     file_path = Path(FILENAME)
     edit_mode = 'a'
     put_header = False
@@ -78,7 +79,11 @@ def update_download_history(filename: str):
         if put_header:
             file.write(HEADER)
         
-        date = datetime.today().strftime('%Y-%m-%d')
+        date = datetime.today().strftime('%d-%m-%Y')
         time = datetime.today().strftime('%H:%M')
-        file.write(f"{filename};{date};{time}")
-    
+        file.write(f"{filename};{date};{time}\n")
+
+
+def get_download_date() -> str:
+    FILENAME = f"{BASE_DIR_DOWNLOAD}/dowload_history.csv"
+    return datetime.today().strftime('%d-%m-%Y')
