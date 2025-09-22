@@ -4,12 +4,18 @@ from selenium.webdriver.chrome.options import Options
 import inspect
 from pathlib import Path
 
-URL: str = "https://www.fundsexplorer.com.br/ranking"
-TIME_TO_SLEEP: int = 10
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR_DOWNLOAD = os.path.join(os.path.dirname(BASE_DIR), "downloads")
 BASE_DIR_DATA = os.path.join(os.path.dirname(BASE_DIR), "data")
 HTTP_SUCCESS_CODE = 200
+
+STATUSINVEST_CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"
+STATUSINVEST_CSV_ALL_STOCKS_FILENAME = "statusinvest-busca-avancada-todos.csv"
+STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME = "statusinvest-busca-avancada-financeiro.csv"
+
+MARKETDATA_CSV_ORIGIN_FILENAME = "acoes-listadas-b3.csv"
+
+TRADINGVIEW_CSV_ORIGIN_FILENAME = "trading-view-stocks.csv"
 
 
 class Log():
@@ -37,7 +43,7 @@ class Selenium():
     @staticmethod
     def get_options() -> Options:
         options = Options()
-        # options.add_argument("--headless=new")
+        options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")

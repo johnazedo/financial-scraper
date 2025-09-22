@@ -1,5 +1,5 @@
 from services.service import Service
-from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded, update_download_history
+from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded, update_download_history, MARKETDATA_CSV_ORIGIN_FILENAME
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,7 +9,6 @@ import os, time
 class MarketDataService(Service):
 
     _URL = "https://www.dadosdemercado.com.br/acoes"
-    _CSV_ORIGIN_FILENAME = "acoes-listadas-b3.csv"
 
     def config_step(self):
         Log.log("Start")
@@ -32,7 +31,7 @@ class MarketDataService(Service):
             Log.log(f"Save file in {BASE_DIR_DOWNLOAD}")
 
             timeout = 30
-            is_file_downloaded = check_if_file_was_downloaded(self._CSV_ORIGIN_FILENAME, timeout)
+            is_file_downloaded = check_if_file_was_downloaded(MARKETDATA_CSV_ORIGIN_FILENAME, timeout)
             if is_file_downloaded:
                 Log.log("Download completed!")
             else:
@@ -41,7 +40,7 @@ class MarketDataService(Service):
         except Exception as e:
             Log.log_error("Error when try to download csv", e)
         finally:
-            update_download_history(self._CSV_ORIGIN_FILENAME)
+            update_download_history(MARKETDATA_CSV_ORIGIN_FILENAME)
             self.driver.quit()
 
     def read_page_and_get_data(self):

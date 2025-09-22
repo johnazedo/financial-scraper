@@ -1,5 +1,5 @@
 from services.service import Service
-from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded, update_download_history
+from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded, update_download_history, STATUSINVEST_CSV_ALL_STOCKS_FILENAME, STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME,STATUSINVEST_CSV_ORIGIN_FILENAME
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -11,15 +11,12 @@ class StatusInvestService(Service):
 
     _SEARCH_BUTTON_DATA_TOOLTIP = "Clique para fazer a busca com base nos valores informados"
     _URL = "https://statusinvest.com.br/acoes/busca-avancada"
-    _CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"
-    _CSV_ALL_STOCKS_FILENAME = "statusinvest-busca-avancada-todos.csv"
-    _CSV_FINANCIAL_STOCKS_FILENAME = "statusinvest-busca-avancada-financeiro.csv"
     
     def config_step(self):
         Log.log("Start")
         options = Selenium.get_options()
         self.driver = webdriver.Chrome(options=options)
-        self.filename = self._CSV_ORIGIN_FILENAME
+        self.filename = STATUSINVEST_CSV_ORIGIN_FILENAME
     
     def make_request(self):
         Log.log("Start")
@@ -88,12 +85,12 @@ class StatusInvestService(Service):
     
     def _rename_file(self):
         if(self.get_only_financial_sector):
-            self.filename = self._CSV_FINANCIAL_STOCKS_FILENAME
+            self.filename = STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME
         else:
-            self.filename = self._CSV_ALL_STOCKS_FILENAME
+            self.filename = STATUSINVEST_CSV_ALL_STOCKS_FILENAME
         
         new_filename = f"{BASE_DIR_DOWNLOAD}/{self.filename}"
-        old_filename = f"{BASE_DIR_DOWNLOAD}/{self._CSV_ORIGIN_FILENAME}"
+        old_filename = f"{BASE_DIR_DOWNLOAD}/{STATUSINVEST_CSV_ORIGIN_FILENAME}"
 
         os.rename(old_filename, new_filename)
 

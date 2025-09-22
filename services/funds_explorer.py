@@ -3,13 +3,16 @@ import csv
 import os
 from datetime import datetime
 from bs4 import BeautifulSoup
-from main.settings import URL, Log, TIME_TO_SLEEP, BASE_DIR, Selenium, update_download_history
+from main.settings import Log, BASE_DIR, Selenium, update_download_history
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from services.service import Service
 
 class FundsExplorerService(Service):
+
+    _FUNDS_EXPLORER_URL: str = "https://www.fundsexplorer.com.br/ranking"
+    _TIME_TO_SLEEP: int = 10
 
     def config_step(self):
         Log.log("Start")
@@ -19,9 +22,9 @@ class FundsExplorerService(Service):
     def make_request(self):
         Log.log("Start")
         try:
-            self.driver.get(URL)
-            Log.log(f"Accessing {URL}")
-            time.sleep(TIME_TO_SLEEP)
+            self.driver.get(self._FUNDS_EXPLORER_URL)
+            Log.log(f"Accessing {self._FUNDS_EXPLORER_URL}")
+            time.sleep(self._TIME_TO_SLEEP)
             self.source_code = self.driver.page_source
         except Exception as e:
             Log.log_error("Error when extract data", e)

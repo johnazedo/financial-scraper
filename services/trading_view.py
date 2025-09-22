@@ -3,14 +3,13 @@ from typing import List
 import requests
 from requests import Response
 from bs4 import BeautifulSoup, Tag
-from main.settings import HTTP_SUCCESS_CODE, Log, BASE_DIR_DOWNLOAD, update_download_history
+from main.settings import HTTP_SUCCESS_CODE, Log, BASE_DIR_DOWNLOAD, update_download_history, TRADINGVIEW_CSV_ORIGIN_FILENAME
 
 class TradingViewService(Service):
 
     _SYMBOL = ":stock:"
     _URL = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/"
-    _FILENAME = "trading-view-stocks.csv"
-    _FILE_PATH = f"{BASE_DIR_DOWNLOAD}/{_FILENAME}"
+    _FILE_PATH = f"{BASE_DIR_DOWNLOAD}/{TRADINGVIEW_CSV_ORIGIN_FILENAME}"
 
     def config_step(self):
         Log.log("Start")
@@ -58,7 +57,7 @@ class TradingViewService(Service):
         self.file.writelines(self.lines)
         Log.log("Close file")
         self.file.close()
-        update_download_history(self._FILENAME)
+        update_download_history(TRADINGVIEW_CSV_ORIGIN_FILENAME)
 
     def run(self, stocks: List[str]):
         self.config_step()
