@@ -13,9 +13,10 @@ def get_funds():
 
 def get_stocks():
     status_invest_service = StatusInvestService()
-    status_invest_service.run()
-    market_data_service = MarketDataService()
-    market_data_service.run()
+    status_invest_service.run(False)
+    status_invest_service.run(True)
+    # market_data_service = MarketDataService()
+    # market_data_service.run()
 
 def get_data_from_trading_view():
     stocks = get_stocks_for_csv()

@@ -34,8 +34,8 @@ class FinalCSV():
         df_sel_market_data = self.market_data[["Ticker", "Nome", "Última (R$)", "Variação"]]
         df_sel_trading_view = self.trading_view_data[["STOCK", "DEPARTMENT","IMAGE"]]
 
-        df_merged = self.status_invest_data.merge(df_sel_market_data, left_on="TICKER", right_on="Ticker", how="inner")
-        df_merged = df_merged.merge(df_sel_trading_view, left_on="TICKER", right_on="STOCK", how="inner")
+        df_merged = self.status_invest_data.merge(df_sel_market_data, left_on="TICKER", right_on="Ticker", how="left")
+        df_merged = df_merged.merge(df_sel_trading_view, left_on="TICKER", right_on="STOCK", how="left")
 
         df_merged.to_csv(f"{BASE_DIR_DATA}/{filename}", index=False, sep=";")
 
