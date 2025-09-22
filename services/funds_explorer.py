@@ -52,8 +52,8 @@ class FundsExplorerService(Service):
 
     def transform_data_into_csv(self):
         Log.log("Start")
-        filename = f"funds-{today}.csv"
         today = datetime.today().strftime("%d-%m-%Y")
+        filename = f"funds-{today}.csv"
         path = os.path.join(BASE_DIR, f"../data/{filename}")
         Log.log(f"Get path: {path}")
 
