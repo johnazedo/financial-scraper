@@ -1,4 +1,4 @@
-from main.settings import BASE_DIR_DOWNLOAD, Log, BASE_DIR_DATA
+from main.settings import BASE_DIR_DOWNLOAD, Log, BASE_DIR_DATA, STATUSINVEST_CSV_ALL_STOCKS_FILENAME, STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME, STATUSINVEST_CSV_ORIGIN_FILENAME, MARKETDATA_CSV_ORIGIN_FILENAME, TRADINGVIEW_CSV_ORIGIN_FILENAME
 import pandas as pd
 
 
@@ -15,19 +15,23 @@ class FinalCSV():
     def get_data_from_status_invest(self) -> None:
         # Get all columns from statusinvest
         Log.log("Get data from status invest")
-        FILENAME = f"{BASE_DIR_DOWNLOAD}/statusinvest-busca-avancada.csv"
-        self.status_invest_data = pd.read_csv(FILENAME, delimiter=";")
+        filename = f"{BASE_DIR_DOWNLOAD}/{STATUSINVEST_CSV_ALL_STOCKS_FILENAME}"
+        self.status_invest_data = pd.read_csv(filename, delimiter=";")
+        Log.log("Get data from status invest financial")
+        filename = f"{BASE_DIR_DOWNLOAD}/{STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME}"
+        self.status_invest_financial_data = pd.read_csv(filename, delimiter=";")
+
 
     def get_data_from_market_data(self) -> None:
         # Get name, price and price variation
         Log.log("Get data from market data")
-        FILENAME = f"{BASE_DIR_DOWNLOAD}/acoes-listadas-b3.csv"
+        FILENAME = f"{BASE_DIR_DOWNLOAD}/{MARKETDATA_CSV_ORIGIN_FILENAME}"
         self.market_data = pd.read_csv(FILENAME, delimiter=",")
 
     def get_data_from_trading_view(self) -> None:
         # Get image and department
         Log.log("Get data from trading view")
-        FILENAME = f"{BASE_DIR_DOWNLOAD}/trading-view-stocks.csv"
+        FILENAME = f"{BASE_DIR_DOWNLOAD}/{TRADINGVIEW_CSV_ORIGIN_FILENAME}"
         self.trading_view_data = pd.read_csv(FILENAME, delimiter=";")
 
     def generate_final_csv(self, filename: str) -> None:
