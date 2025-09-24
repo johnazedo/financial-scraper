@@ -34,13 +34,14 @@ class MarketDataService(Service):
             is_file_downloaded = check_if_file_was_downloaded(MARKETDATA_CSV_ORIGIN_FILENAME, timeout)
             if is_file_downloaded:
                 Log.log("Download completed!")
+                update_download_history(MARKETDATA_CSV_ORIGIN_FILENAME)
+
             else:
                 Log.log("Erro to found .csv into downloads folder!")
 
         except Exception as e:
             Log.log_error("Error when try to download csv", e)
         finally:
-            update_download_history(MARKETDATA_CSV_ORIGIN_FILENAME)
             self.driver.quit()
 
     def read_page_and_get_data(self):
