@@ -26,6 +26,10 @@ def get_funds_profits():
     service = InvestorTenService()
     service.run('2024')
 
+def get_market_data():
+    service = MarketDataService()
+    service.run()
+
 def generate_final_csv():
     fc = FinalCSV()
     filename = f"stocks-{get_download_date()}.csv"
