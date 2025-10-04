@@ -58,7 +58,7 @@ class InvestorTenService(Service):
             writer.writerows(self.result)
             Log.log(f"Create file {path}")
         
-        update_download_history(path)
+        update_download_history(filename)
     
     def run(self, year: str):
         self.year = year
