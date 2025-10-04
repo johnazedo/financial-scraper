@@ -3,7 +3,7 @@ import csv
 import os
 from datetime import datetime
 from bs4 import BeautifulSoup
-from main.settings import Log, BASE_DIR, Selenium, update_download_history
+from main.settings import Log, BASE_DIR, Selenium, update_download_history, BASE_DIR_DATA_FUNDS
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
@@ -57,7 +57,7 @@ class FundsExplorerService(Service):
         Log.log("Start")
         today = datetime.today().strftime("%d-%m-%Y")
         filename = f"funds-{today}.csv"
-        path = os.path.join(BASE_DIR, f"../data/{filename}")
+        path = f"{BASE_DIR_DATA_FUNDS}/{filename}"
         Log.log(f"Get path: {path}")
 
         with open(path, "w", encoding="utf-8") as f:

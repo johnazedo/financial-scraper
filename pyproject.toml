@@ -24,6 +24,7 @@ pandas = "^2.3.2"
 get_funds = "main.main:get_funds"
 get_stocks = "main.main:get_stocks"
 generate_final_csv = "main.main:generate_final_csv"
+get_funds_profits = "main.main:get_funds_profits"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

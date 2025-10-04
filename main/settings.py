@@ -6,7 +6,9 @@ from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR_DOWNLOAD = os.path.join(os.path.dirname(BASE_DIR), "downloads")
-BASE_DIR_DATA = os.path.join(os.path.dirname(BASE_DIR), "data")
+BASE_DIR_DATA = os.path.join(os.path.dirname(BASE_DIR), "data/stocks")
+BASE_DIR_DATA_FUNDS = os.path.join(os.path.dirname(BASE_DIR), "data/funds")
+BASE_DIR_DATA_FUNDS_PROFITS = os.path.join(os.path.dirname(BASE_DIR), "data/funds_profits")
 HTTP_SUCCESS_CODE = 200
 
 STATUSINVEST_CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"

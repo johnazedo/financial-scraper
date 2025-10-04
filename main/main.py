@@ -2,6 +2,7 @@ from services.funds_explorer import FundsExplorerService
 from services.status_invest import StatusInvestService
 from services.market_data import MarketDataService
 from services.trading_view import TradingViewService
+from services.investor_ten import InvestorTenService
 from main.settings import BASE_DIR_DOWNLOAD, get_download_date
 from main.core import FinalCSV
 from typing import List
@@ -20,6 +21,10 @@ def get_data_from_trading_view():
     stocks = get_stocks_for_csv()
     service = TradingViewService()
     service.run(stocks)
+
+def get_funds_profits():
+    service = InvestorTenService()
+    service.run('2024')
 
 def generate_final_csv():
     fc = FinalCSV()
