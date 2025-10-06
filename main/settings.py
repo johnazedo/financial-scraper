@@ -12,8 +12,8 @@ BASE_DIR_DATA_FUNDS_PROFITS = os.path.join(os.path.dirname(BASE_DIR), "data/fund
 HTTP_SUCCESS_CODE = 200
 
 STATUSINVEST_CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"
-STATUSINVEST_CSV_ALL_STOCKS_FILENAME = "statusinvest-busca-avancada-todos.csv"
-STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME = "statusinvest-busca-avancada-financeiro.csv"
+STATUSINVEST_CSV_ALL_STOCKS_FILENAME = "statusinvest-busca-avancada.csv"
+STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME = "statusinvest-busca-avancada-:sector:.csv"
 
 MARKETDATA_CSV_ORIGIN_FILENAME = "acoes-listadas-b3.csv"
 
@@ -61,10 +61,10 @@ class Selenium():
         return options
 
 
-def check_if_file_was_downloaded(filename: str, timeout: int) -> bool:
+def check_if_file_was_downloaded(filename: str, timeout: int, download_path: str) -> bool:
     found = False
     for _ in range(timeout):
-        files = [f for f in os.listdir(BASE_DIR_DOWNLOAD) if f.endswith(filename)]
+        files = [f for f in os.listdir(download_path) if f.endswith(filename)]
         if files:
             found = True
             break
