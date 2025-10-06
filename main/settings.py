@@ -11,10 +11,6 @@ BASE_DIR_DATA_FUNDS = os.path.join(os.path.dirname(BASE_DIR), "data/funds")
 BASE_DIR_DATA_FUNDS_PROFITS = os.path.join(os.path.dirname(BASE_DIR), "data/funds_profits")
 HTTP_SUCCESS_CODE = 200
 
-STATUSINVEST_CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"
-STATUSINVEST_CSV_ALL_STOCKS_FILENAME = "statusinvest-busca-avancada.csv"
-STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME = "statusinvest-busca-avancada-:sector:.csv"
-
 MARKETDATA_CSV_ORIGIN_FILENAME = "acoes-listadas-b3.csv"
 
 TRADINGVIEW_CSV_ORIGIN_FILENAME = "trading-view-stocks.csv"
@@ -43,7 +39,7 @@ class Log():
 class Selenium():
 
     @staticmethod
-    def get_options() -> Options:
+    def get_options(download_path: str) -> Options:
         options = Options()
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
@@ -52,7 +48,7 @@ class Selenium():
         options.add_argument("--window-size=1920,1080")
         options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
         prefs = {
-            "download.default_directory": BASE_DIR_DOWNLOAD,
+            "download.default_directory": download_path,
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True,

@@ -1,5 +1,5 @@
 from services.service import Service
-from main.settings import Log, Selenium, BASE_DIR_DOWNLOAD, check_if_file_was_downloaded, update_download_history, STATUSINVEST_CSV_ALL_STOCKS_FILENAME, STATUSINVEST_CSV_FINANCIAL_STOCKS_FILENAME,STATUSINVEST_CSV_ORIGIN_FILENAME, STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME
+from main.settings import Log, Selenium, check_if_file_was_downloaded
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -8,24 +8,25 @@ import os, time
 from enum import Enum
 
 
-
 class StatusInvestService(Service):
 
     class Sector(Enum):
-        cyclic_consumption = ("cyclic-consumption", "Consumo Cíclico")
-        non_cyclic_consumption = ("non-cyclic-consumption", "Consumo não Cíclico")
-        public_utilities = ("public-utilities", "Utilidade Pública")
-        industrial_goods = ("industrial-goods", "Bens Industriais")
-        basic_materials = ("basic-materials", "Materiais Básicos")
-        financial_and_others = ("financial-and-others", "Financeiro e Outros")
-        information_technology = ("information-technology", "Tecnologia da Informação")
-        healthcare = ("healthcare", "Saúde")
-        oil_gas_and_biofuels = ("oil-gas-and-biofuels", "Petróleo. Gás e Biocombustíveis")
-        communications = ("communications", "Comunicações")
-        undefined = ("undefined", "Indefinido")
+        CYCLIC_CONSUMPTION = ("cyclic-consumption", "Consumo Cíclico")
+        NON_CYCLIC_CONSUMPTION = ("non-cyclic-consumption", "Consumo não Cíclico")
+        PUBLIC_UTILITIES = ("public-utilities", "Utilidade Pública")
+        INDUSTRIAL_GOODS = ("industrial-goods", "Bens Industriais")
+        BASIC_MATERIALS = ("basic-materials", "Materiais Básicos")
+        FINANCIAL_AND_OTHERS = ("financial-and-others", "Financeiro e Outros")
+        INFORMATION_TECHNOLOGY = ("information-technology", "Tecnologia da Informação")
+        HEALTHCARE = ("healthcare", "Saúde")
+        OIL_GAS_AND_BIOFUELS = ("oil-gas-and-biofuels", "Petróleo. Gás e Biocombustíveis")
+        COMMUNICATIONS = ("communications", "Comunicações")
+        UNDEFINED = ("undefined", "Indefinido")
 
     _SEARCH_BUTTON_DATA_TOOLTIP = "Clique para fazer a busca com base nos valores informados"
     _URL = "https://statusinvest.com.br/acoes/busca-avancada"
+    _STATUSINVEST_CSV_ORIGIN_FILENAME = "statusinvest-busca-avancada.csv"
+    _STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME = "statusinvest-busca-avancada-:sector:.csv"
 
     def __init__(self, download_path: str):
         super().__init__()
@@ -33,7 +34,7 @@ class StatusInvestService(Service):
 
     def config_step(self):
         Log.log("Start")
-        options = Selenium.get_options()
+        options = Selenium.get_options(self.download_path)
         self.driver = webdriver.Chrome(options=options)
     
     def make_request(self):
@@ -41,7 +42,7 @@ class StatusInvestService(Service):
         self.driver.get(self._URL)
 
         try:
-            if(self.sector != StatusInvestService.Sector.undefined):
+            if(self.sector != StatusInvestService.Sector.UNDEFINED):
                 Log.log(f"Select sector {self.sector}")
                 Log.log("Search for dropdown-item Sectors")
                 span_element = WebDriverWait(self.driver, 10).until(
@@ -82,7 +83,7 @@ class StatusInvestService(Service):
             Log.log(f"Save file in {self.download_path}")
 
             timeout = 30
-            is_file_downloaded = check_if_file_was_downloaded(STATUSINVEST_CSV_ORIGIN_FILENAME, timeout, self.download_path)
+            is_file_downloaded = check_if_file_was_downloaded(self._STATUSINVEST_CSV_ORIGIN_FILENAME, timeout, self.download_path)
             if is_file_downloaded:
                 Log.log("Download completed!")
                 self._rename_file()
@@ -101,15 +102,14 @@ class StatusInvestService(Service):
         Log.log("Skip transform data into csv")
     
     def _rename_file(self):
-        if(self.sector != StatusInvestService.Sector.undefined):
-            self.filename = STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME.replace(":sector:", self.sector.value[0])
-        else:
-            self.filename = STATUSINVEST_CSV_ALL_STOCKS_FILENAME
-        
-        new_filename = f"{self.download_path}/{self.filename}"
-        old_filename = f"{self.download_path}/{STATUSINVEST_CSV_ORIGIN_FILENAME}"
+        if(self.sector == StatusInvestService.Sector.UNDEFINED):
+            return
 
-        os.rename(old_filename, new_filename)
+        filename = self._STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME.replace(":sector:", self.sector.value[0])
+        new_path = f"{self.download_path}/{filename}"
+        old_path = f"{self.download_path}/{self._STATUSINVEST_CSV_ORIGIN_FILENAME}"
+
+        os.rename(old_path, new_path)
 
     def run(self, sector: Sector = Sector.undefined):
         self.sector = sector

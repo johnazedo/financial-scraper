@@ -15,8 +15,7 @@ def get_funds():
 def get_stocks():
     status_invest_service = StatusInvestService(download_path=BASE_DIR_DOWNLOAD)
     status_invest_service.run()
-    status_invest_service.run(StatusInvestService.Sector.financial_and_others)
-
+    status_invest_service.run(StatusInvestService.Sector.FINANCIAL_AND_OTHERS)
 
 def get_data_from_trading_view():
     stocks = get_stocks_for_csv()
