@@ -108,9 +108,8 @@ class StatusInvestService(Service):
         filename = self._STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME.replace(":sector:", self.sector.value[0])
         new_path = f"{self.download_path}/{filename}"
         old_path = f"{self.download_path}/{self._STATUSINVEST_CSV_ORIGIN_FILENAME}"
-
         os.rename(old_path, new_path)
 
-    def run(self, sector: Sector = Sector.undefined):
+    def run(self, sector: Sector = Sector.UNDEFINED):
         self.sector = sector
         super().run()
