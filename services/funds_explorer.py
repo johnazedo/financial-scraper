@@ -3,7 +3,7 @@ import csv
 import os
 from datetime import datetime
 from bs4 import BeautifulSoup
-from main.settings import Log, BASE_DIR, Selenium, update_download_history, BASE_DIR_DATA_FUNDS
+from services.settings import Log, BASE_DIR, Selenium, update_download_history, BASE_DIR_DATA_FUNDS
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options

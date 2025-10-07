@@ -4,8 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["João Pedro Limão <jplimao077@gmail.com>"]
 packages = [
-    {include = "main"},
-    {include = "services"}
+    {include = "financial_scraper"},
+    {include = "examples"},
+    {include = "services"},
 ]
 
 [tool.poetry.dependencies]
@@ -21,14 +22,9 @@ pandas = "^2.3.2"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-get_funds = "main.main:get_funds"
-get_stocks = "main.main:get_stocks"
-generate_final_csv = "main.main:generate_final_csv"
-get_funds_profits = "main.main:get_funds_profits"
-get_market_data = "main.main:get_market_data"
-get_trading_view_data = "main.main:get_data_from_trading_view"
-get_stocks_fundamentus = "main.main:get_stocks_fundamentus"
+example_status_invest = "examples.usage:status_invest_example"
+example_fundamentus = "examples.usage:fundamentus_example"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+build-backend = "poetry.cexample_status_investore.masonry.api"

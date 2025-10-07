@@ -1,14 +1,14 @@
-from services.service import Service
-from services.settings import Log, Selenium, check_if_file_was_downloaded
+from config.selenium import Selenium
+from config.utils import Log, check_if_file_was_downloaded
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-import os, time
+import os
 from enum import Enum
 
 
-class StatusInvestService(Service):
+class StatusInvestProvider():
 
     class Sector(Enum):
         CYCLIC_CONSUMPTION = ("cyclic-consumption", "Consumo Cíclico")
@@ -42,7 +42,7 @@ class StatusInvestService(Service):
         self.driver.get(self._URL)
 
         try:
-            if(self.sector != StatusInvestService.Sector.UNDEFINED):
+            if(self.sector != StatusInvestProvider.Sector.UNDEFINED):
                 Log.log(f"Select sector {self.sector}")
                 Log.log("Search for dropdown-item Sectors")
                 span_element = WebDriverWait(self.driver, 10).until(
@@ -102,7 +102,7 @@ class StatusInvestService(Service):
         Log.log("Skip transform data into csv")
     
     def _rename_file(self):
-        if(self.sector == StatusInvestService.Sector.UNDEFINED):
+        if(self.sector == StatusInvestProvider.Sector.UNDEFINED):
             return
 
         filename = self._STATUSINVEST_CSV_SECTOR_STOCKS_FILENAME.replace(":sector:", self.sector.value[0])
@@ -112,4 +112,7 @@ class StatusInvestService(Service):
 
     def run(self, sector: Sector = Sector.UNDEFINED):
         self.sector = sector
-        super().run()
+        self.config_step()
+        self.make_request()
+        self.read_page_and_get_data()
+        self.transform_data_into_csv()

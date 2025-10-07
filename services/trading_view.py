@@ -3,7 +3,7 @@ from typing import List
 import requests
 from requests import Response
 from bs4 import BeautifulSoup, Tag
-from main.settings import HTTP_SUCCESS_CODE, Log, BASE_DIR_DOWNLOAD, update_download_history, TRADINGVIEW_CSV_ORIGIN_FILENAME
+from services.settings import HTTP_SUCCESS_CODE, Log, BASE_DIR_DOWNLOAD, update_download_history, TRADINGVIEW_CSV_ORIGIN_FILENAME
 
 class TradingViewService(Service):
 

@@ -1,12 +1,11 @@
-from services.service import Service
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from services.settings import Log
+from config.utils import Log
 
 
-class FundamentusService(Service):
+class FundamentusProvider():
     _URL = "https://fundamentus.com.br/resultado.php"
     _HEADERS = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -72,3 +71,9 @@ class FundamentusService(Service):
         except Exception as e:
             Log.log_error("Error saving data to CSV", e)
             raise e
+        
+    def run(self):
+        self.config_step()
+        self.make_request()
+        self.read_page_and_get_data()
+        self.transform_data_into_csv()
