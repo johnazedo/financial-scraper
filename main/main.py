@@ -3,8 +3,8 @@ from services.status_invest import StatusInvestService
 from services.market_data import MarketDataService
 from services.trading_view import TradingViewService
 from services.investor_ten import InvestorTenService
+from services.fundamentus import FundamentusService
 from main.settings import BASE_DIR_DOWNLOAD, get_download_date
-from main.core import FinalCSV
 from typing import List
 import pandas as pd
 
@@ -30,11 +30,14 @@ def get_market_data():
     service = MarketDataService()
     service.run()
 
-def generate_final_csv():
-    fc = FinalCSV()
-    filename = f"stocks-{get_download_date()}.csv"
-    fc.generate_final_csv(filename)
+# def generate_final_csv():
+#     fc = FinalCSV()
+#     filename = f"stocks-{get_download_date()}.csv"
+#     fc.generate_final_csv(filename)
 
+def get_stocks_fundamentus():
+    service = FundamentusService()
+    service.run()
 
 def get_stocks_for_csv() -> List[str]:
     FILENAME = f"{BASE_DIR_DOWNLOAD}/statusinvest-busca-avancada.csv"
