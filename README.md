@@ -12,6 +12,8 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
 
+> **Disclaimer**: This tool relies on web scraping techniques to collect data from financial websites. If any of the algorithms stop working, it may be due to changes in the structure or content of the websites being scraped. Web scraping is inherently fragile and dependent on website stability. Regular maintenance may be required to adapt to website changes.
+
 ## Prerequisites
 
 - Python 3.10 or higher
