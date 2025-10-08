@@ -1,19 +1,14 @@
-# Web Scraping Financial
+# Financial Scraper 
 
-A Python-based web scraping tool for collecting and analyzing financial data from multiple sources. This project helps you gather information about funds, stocks, and their respective profits from various financial websites.
+A Python-based web scraping tool for collecting and analyzing financial data from multiple sources. This project helps you gather information about stocks from various financial websites.
 
 ## Features
 
 - Scrapes financial data from multiple sources:
   - FundsExplorer
   - StatusInvest
-  - TradingView
-  - Investidor 10
-  - Dados de Mercado
 - Collects information about:
-  - Funds
   - Stocks
-  - Funds profits
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
 
@@ -26,8 +21,8 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/johnazedo/web-scraping-financial.git
-cd web-scraping-financial
+git clone https://github.com/johnazedo/financial-scraper.git
+cd financial-scraper
 ```
 
 2. Install dependencies using Poetry:
@@ -37,54 +32,61 @@ poetry install
 
 ## Usage
 
-The project provides several commands for different data collection tasks:
 
-### Collect FIIs Data
-Get list of FIIs from funds explorer site.
-
-```bash
-poetry run get_funds
-```
-
-### Collect Stock Data
-Get stocks financial data from status invest site.
+#### Collect Stock Data
+Get stocks financial data from status invest site or fundamentus site
 
 ```bash
-poetry run get_stocks
+poetry run example_status_invest
 ```
-
-### Generate Final CSV
-Generate a CSV with combine data between the follow sorces
-
-- StatusInvest Site: Financial data;
-- TradingView Site: Stocks department and image;
-- "Dados de Mercado" Site: Nome.
 
 ```bash
-poetry run generate_final_csv
+poetry run example_fundamentus
 ```
 
-### Get Funds Profits
-Get data from "Investidor 10" site.
+### Python API
 
-```bash
-poetry run get_funds_profits
+You can also use Financial Scraper as a Python library in your own code:
+
+#### Using the Status Invest Provider
+
+```python
+from financial_scraper import StatusInvestProvider
+import os
+
+# Set the download path
+download_path = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize the provider
+provider = StatusInvestProvider(
+    download_path=download_path,
+)
+
+# Fetch all stocks
+provider.run()
+
+# Fetch stocks from a specific sector
+provider.run(sector=StatusInvestProvider.Sector.FINANCIAL_AND_OTHERS)
 ```
 
-### Get Market Data
-Get stocks name from "Dados de Mercado" site.
+#### Using the Fundamentus Provider
 
-```bash
-poetry run get_market_data
+```python
+from financial_scraper import FundamentusProvider
+import os
+
+# Set the download path
+download_path = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize the provider
+provider = FundamentusProvider(
+    download_path=download_path,
+)
+
+# Fetch and save data
+provider.run()
 ```
 
-### Get TradingView Data
-Get stocks department and image from TradingView site.
-This script uses data from get_stock script
-
-```bash
-poetry run get_trading_view_data
-```
 
 ## Project Structure
 
@@ -93,25 +95,25 @@ poetry run get_trading_view_data
 ├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-├── data/               # Organized CSV data files
-│   ├── funds/         # Fund-related data
-│   ├── funds_profits/ # Fund profit information
-│   └── stocks/        # Stock-related data
-├── downloads/         # Raw downloaded data
-│   ├── README.md
-├── main/             # Core application logic
-│   ├── __init__.py
-│   ├── core.py      # Core functionality
-│   ├── main.py      # Entry point with command definitions
-│   └── settings.py  # Application settings and configuration
-└── services/         # Service integrations for different data sources
-    ├── __init__.py
-    ├── funds_explorer.py   # FundsExplorer scraping service
-    ├── investor_ten.py     # Investidor 10 scraping service
-    ├── market_data.py      # Market data service
-    ├── service.py          # Base service class
-    ├── status_invest.py    # StatusInvest scraping service
-    └── trading_view.py     # TradingView scraping service
+├── CONTRIBUTING.md
+├── mkdocs.yml
+├── docs/               # Documentation files
+│   ├── index.md        # Main documentation page
+│   ├── examples.md     # Usage examples
+│   ├── getting-started/# Installation and basic usage
+│   └── modules/        # Module-specific documentation
+├── examples/           # Example usage scripts
+│   └── usage.py        # Example implementation
+├── financial_scraper/  # Core package
+│   ├── __init__.py     # Package exports
+│   ├── config/         # Configuration utilities
+│   │   ├── __init__.py
+│   │   ├── selenium.py # Selenium configuration
+│   │   └── utils.py    # Utility functions and logging
+│   └── providers/      # Data providers
+│       ├── __init__.py
+│       ├── fundamentus.py      # Fundamentus scraper
+│       └── status_invest.py    # StatusInvest scraper
 ```
 
 ## Dependencies

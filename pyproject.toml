@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "web-scraping-financial"
-version = "0.1.0"
+name = "financial-scraper"
+version = "1.0.0"
 description = ""
 authors = ["João Pedro Limão <jplimao077@gmail.com>"]
 packages = [
@@ -20,6 +20,10 @@ lxml-html-clean = "^0.4.2"
 pandas = "^2.3.2"
 
 [tool.poetry.dev-dependencies]
+mkdocs = "^1.5.3"
+mkdocs-material = "^9.5.3"
+mkdocstrings = {extras = ["python"], version = "^0.24.0"}
+mkdocs-git-revision-date-localized-plugin = "^1.2.1"
 
 [tool.poetry.scripts]
 example_status_invest = "examples.usage:status_invest_example"

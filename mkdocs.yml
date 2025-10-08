@@ -1,0 +1,83 @@
+site_name: Financial Scraper
+site_description: A Python-based web scraping tool for collecting and analyzing financial data from multiple sources
+site_author: João Pedro Limão
+site_url: https://github.com/johnazedo/financial-scraper
+
+repo_name: johnazedo/financial-scraper
+repo_url: https://github.com/johnazedo/financial-scraper
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Basic Usage: getting-started/basic-usage.md
+  - Modules:
+      - financial_scraper:
+          - Overview: modules/financial_scraper/overview.md
+          - Providers:
+              - Status Invest: modules/financial_scraper/providers/status_invest.md
+              - Fundamentus: modules/financial_scraper/providers/fundamentus.md
+  - Examples: examples.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+  - License: license.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [financial_scraper]
+          options:
+            show_source: true
+            show_submodules: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/johnazedo
+      name: johnazedo on GitHub
+
+copyright: Copyright &copy; 2023 - Present | João Pedro Limão
