@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from config.utils import Log
+from financial_scraper.config.utils import Log
 
 
 class FundamentusProvider():

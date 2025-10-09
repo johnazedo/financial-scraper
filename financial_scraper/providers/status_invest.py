@@ -1,5 +1,5 @@
-from config.selenium import Selenium
-from config.utils import Log, check_if_file_was_downloaded
+from financial_scraper.config.selenium import Selenium
+from financial_scraper.config.utils import Log, check_if_file_was_downloaded
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
