@@ -3,9 +3,10 @@ from selenium.webdriver.chrome.options import Options
 class Selenium():
 
     @staticmethod
-    def get_options(download_path: str) -> Options:
+    def get_options(download_path: str, show_browser: bool = False) -> Options:
         options = Options()
-        options.add_argument("--headless=new")
+        if not show_browser:
+            options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
