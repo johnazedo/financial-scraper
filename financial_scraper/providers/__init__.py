@@ -1,2 +1,1 @@
-from .fundamentus import FundamentusProvider
-from .status_invest import StatusInvestProvider
+
