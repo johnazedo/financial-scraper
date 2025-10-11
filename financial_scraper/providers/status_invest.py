@@ -128,3 +128,4 @@ class StatusInvestProvider():
         self.make_request()
         self.read_page_and_get_data()
         self.transform_data_into_csv()
+
