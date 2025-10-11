@@ -9,10 +9,12 @@ def status_invest_example():
     # Initialize the service with Status Invest provider
     service = StatusInvestProvider(
         download_path=BASE_DIR,
+        filename="status_invest_stocks.csv",
+        show_browser=True
     )
     
     # Fetch and save data
-    service.run()
+    service.run(sector=StatusInvestProvider.Sector.FINANCIAL_AND_OTHERS)
 
 def fundamentus_example():
     # Initialize the service with Fundamentus provider
@@ -22,7 +24,7 @@ def fundamentus_example():
     
     # Fetch and save data
     service.run()
-
+    
         
 if __name__ == "__main__":
     status_invest_example()

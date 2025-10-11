@@ -46,7 +46,7 @@ class StatusInvestProvider():
 
         try:
             if(self.sector != StatusInvestProvider.Sector.UNDEFINED):
-                self._change_type_of_sector()
+                self.select_sector()
                 
             Log.log("Get search button")
             search_button = WebDriverWait(self.driver, 10).until(
@@ -100,7 +100,7 @@ class StatusInvestProvider():
         old_path = f"{self.download_path}/{self._STATUSINVEST_CSV_ORIGIN_FILENAME}"
         os.rename(old_path, new_path)
     
-    def _change_type_of_sector(self):
+    def select_sector(self):
         Log.log(f"Select sector {self.sector}")
         Log.log("Search for dropdown-item Sectors")
         span_element = WebDriverWait(self.driver, 10).until(
