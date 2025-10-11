@@ -40,6 +40,7 @@ mkdocs-git-revision-date-localized-plugin = "^1.2.1"
 [tool.poetry.scripts]
 example_status_invest = "examples.usage:status_invest_example"
 example_fundamentus = "examples.usage:fundamentus_example"
+example_investor_ten = "examples.usage:investor_ten_example"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -16,8 +16,8 @@ class InvestorTenProvider():
 
     _FILENAME = "funds-:year:.csv"
 
-    def __inti__(self, download_path: str, filename: str = None, show_browser: bool = False):
-        super().__inti__()
+    def __init__(self, download_path: str, filename: str = None, show_browser: bool = False):
+        super().__init__()
         self.download_path = download_path
         self.filename = filename
         self.show_browser = show_browser
