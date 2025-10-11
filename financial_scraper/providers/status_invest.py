@@ -39,15 +39,15 @@ class StatusInvestProvider():
         Log.log("Start")
         options = Selenium.get_options(self.download_path, self.show_browser)
         self.driver = webdriver.Chrome(options=options)
-    
+
     def make_request(self):
         Log.log("Start")
         self.driver.get(self._URL)
 
         try:
-            if(self.sector != StatusInvestProvider.Sector.UNDEFINED):
+            if (self.sector != StatusInvestProvider.Sector.UNDEFINED):
                 self.select_sector()
-                
+
             Log.log("Get search button")
             search_button = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, f"//button[@data-tooltip='{self._SEARCH_BUTTON_DATA_TOOLTIP}']"))
@@ -67,13 +67,14 @@ class StatusInvestProvider():
             Log.log(f"Save file in {self.download_path}")
 
             timeout = 30
-            is_file_downloaded = check_if_file_was_downloaded(self._STATUSINVEST_CSV_ORIGIN_FILENAME, timeout, self.download_path)
+            is_file_downloaded = check_if_file_was_downloaded(
+                self._STATUSINVEST_CSV_ORIGIN_FILENAME, timeout, self.download_path)
             if is_file_downloaded:
                 Log.log("Download completed!")
                 self._rename_file()
             else:
                 Log.log(f"Erro to found .csv into {self.download_path}!")
-                
+
         except Exception as e:
             Log.log_error("Error when try to download csv", e)
         finally:
@@ -84,22 +85,22 @@ class StatusInvestProvider():
 
     def transform_data_into_csv(self):
         Log.log("Skip transform data into csv")
-    
+
     def _rename_file(self):
         # TODO: Make this more readeble
         sector_string = self._NO_SECTOR
-        if(self.sector != StatusInvestProvider.Sector.UNDEFINED):
+        if (self.sector != StatusInvestProvider.Sector.UNDEFINED):
             sector_string = f"-{self.sector.value[0]}"
-        
+
         filename = self._STATUSINVEST_CSV_NEW_STOCKS_FILENAME.replace(":sector:", sector_string)
-        
+
         if self.filename is not None:
             filename = self.filename
-        
+
         new_path = f"{self.download_path}/{filename}"
         old_path = f"{self.download_path}/{self._STATUSINVEST_CSV_ORIGIN_FILENAME}"
         os.rename(old_path, new_path)
-    
+
     def select_sector(self):
         Log.log(f"Select sector {self.sector}")
         Log.log("Search for dropdown-item Sectors")
@@ -116,7 +117,8 @@ class StatusInvestProvider():
         Log.log("Wait to the options")
         option = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located(
-                (By.XPATH, f"//ul[contains(@class,'select-dropdown')]/li/span[normalize-space()='{self.sector.value[1]}']")
+                (By.XPATH,
+                 f"//ul[contains(@class,'select-dropdown')]/li/span[normalize-space()='{self.sector.value[1]}']")
             )
         )
         Log.log(f"Click to {self.sector}")
@@ -128,4 +130,3 @@ class StatusInvestProvider():
         self.make_request()
         self.read_page_and_get_data()
         self.transform_data_into_csv()
-

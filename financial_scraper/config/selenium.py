@@ -1,5 +1,6 @@
 from selenium.webdriver.chrome.options import Options
 
+
 class Selenium():
 
     @staticmethod
