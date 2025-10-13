@@ -2,8 +2,9 @@ import inspect
 import time
 import os
 
+
 class Log():
-    def _get_caller_name()-> str:
+    def _get_caller_name() -> str:
         caller_frame = inspect.stack()[2].frame
         caller_function = inspect.stack()[2].function
         caller_self = caller_frame.f_locals.get('self', None)
@@ -15,7 +16,7 @@ class Log():
     def log(msg: str):
         caller = Log._get_caller_name()
         print(f'{caller}: {msg}')
-    
+
     def log_error(msg: str, error: Exception):
         caller = Log._get_caller_name()
         print(f'{caller}: {msg}')
