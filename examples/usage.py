@@ -1,5 +1,5 @@
 # Examples of using the market_scraper library
-from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider
+from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider, InvestorTenBsProvider
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,8 +30,7 @@ def fundamentus_example():
 def investor_ten_example():
     # Initialize the service with Investor10 provider
     service = InvestorTenProvider(
-        download_path=BASE_DIR,
-        show_browser=True
+        download_path=BASE_DIR
     )
 
     # Fetch and save data
