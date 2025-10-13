@@ -6,6 +6,18 @@ from financial_scraper.config.utils import Log
 
 
 class FundamentusProvider():
+    """
+    Provider for scraping fundamental stock data from Fundamentus website.
+    
+    This class uses the requests library to fetch HTML content from Fundamentus
+    and BeautifulSoup to parse the data. It extracts fundamental indicators for
+    Brazilian stocks and saves them as a CSV file.
+    
+    Attributes:
+        download_path (str): Directory where the CSV file will be saved.
+        data (list): List to store the parsed stock data.
+        df (pandas.DataFrame): DataFrame containing the parsed stock data.
+    """
     _URL = "https://fundamentus.com.br/resultado.php"
     _HEADERS = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' +
@@ -13,15 +25,17 @@ class FundamentusProvider():
     }
 
     def __init__(self, download_path: str):
+        """
+        Initialize the FundamentusProvider.
+        
+        Args:
+            download_path (str): Directory path where the CSV file will be saved.
+        """
         super().__init__()
         self.data = []
         self.download_path = download_path
 
-    def config_step(self):
-        Log.log("Skip config step")
-
-    def make_request(self):
-        """Make request to Fundamentus website"""
+    def _make_request(self):
         try:
             Log.log(f"Making request to {self._URL}")
             response = requests.get(self._URL, headers=self._HEADERS)
@@ -32,8 +46,7 @@ class FundamentusProvider():
             Log.log_error("Error making request to Fundamentus", e)
             raise e
 
-    def read_page_and_get_data(self):
-        """Parse HTML and extract table data"""
+    def _read_page_and_get_data(self):
         try:
             Log.log("Parsing HTML content")
             soup = BeautifulSoup(self.html_content, 'html.parser')
@@ -58,8 +71,7 @@ class FundamentusProvider():
             Log.log_error("Error parsing HTML content", e)
             raise e
 
-    def transform_data_into_csv(self):
-        """Save the data to CSV file"""
+    def _transform_data_into_csv(self):
         try:
             current_date = datetime.now().strftime("%d-%m-%Y")
             filename = f"fundamentus-{current_date}.csv"
@@ -74,7 +86,16 @@ class FundamentusProvider():
             raise e
 
     def run(self):
-        self.config_step()
-        self.make_request()
-        self.read_page_and_get_data()
-        self.transform_data_into_csv()
+        """
+        Execute the complete scraping process for Fundamentus data.
+        
+        This is the main public method to run the scraper. It performs all steps:
+        configuration, making the HTTP request, parsing the HTML data, and saving
+        the results to a CSV file.
+        
+        Returns:
+            None: The results are saved as a CSV file in the download_path.
+        """
+        self._make_request()
+        self._read_page_and_get_data()
+        self._transform_data_into_csv()
