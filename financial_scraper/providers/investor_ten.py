@@ -102,6 +102,6 @@ class InvestorTenProvider():
         try:
             row[4] = row[4].split(' ')[1].replace(',', '.')
         except Exception as e:
-            Log.log_error(f"Unable to clean data of {row[0]} in column . Row: {row}", e)
+            Log.log_error(f"Unable to clean data of {row[0]} in column Valor. Row: {row}", e)
 
         return row
