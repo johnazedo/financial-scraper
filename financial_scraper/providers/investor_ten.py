@@ -3,7 +3,7 @@ import os
 import requests
 from typing import List
 from bs4 import BeautifulSoup
-from services.settings import Log
+from financial_scraper.config.utils import Log
 
 
 class InvestorTenProvider():
