@@ -1,20 +1,16 @@
-from services.service import Service
-from services.settings import Log
-from selenium.webdriver.common.by import By
 import csv
 import os
 import requests
 from typing import List
 from bs4 import BeautifulSoup
-from services.settings import BASE_DIR_DATA_FUNDS_PROFITS
+from services.settings import Log
 
 
 class InvestorTenProvider():
 
     _URL = "https://investidor10.com.br/fiis/dividendos/:year:/:month:/"
-    # _MONTHS = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho",
-    # "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
-    _MONTHS = ["janeiro"]
+    _MONTHS = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho",
+               "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
     _FILENAME = "funds-:year:.csv"
     _HEADERS = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -56,11 +52,16 @@ class InvestorTenProvider():
         rows = self.table.select("tbody tr")
         Log.log(f"Found {len(rows)} rows for {self.month}")
         for row in rows:
-            Log.log(f"Processing row: {row}")
-            cols = [col.get_text(strip=True) for col in row.select("td")]
+            cols = row.select("td")
+            if not cols:
+                continue
+
+            ticker = cols[0].select_one(".ticker-name").get_text(strip=True)
+            vector_cols = [col.get_text(strip=True) for col in cols]
             Log.log(f"Extracted columns: {cols}")
-            if cols:
-                cleaned = self._clean_data(cols)
+            if vector_cols:
+                vector_cols[0] = ticker
+                cleaned = self._clean_data(vector_cols)
                 self.result.append(cleaned)
 
     def _transform_data_into_csv(self):
@@ -93,12 +94,14 @@ class InvestorTenProvider():
         # Clean column Data com
         try:
             row[1] = row[1].replace('/', '-')
+            row[1] = row[1].replace('Data Com', '').strip()
         except Exception as e:
             Log.log_error(f"Unable to clean data of {row[0]} in column Data com. Row: {row}", e)
 
         # Clean column Pagamento com
         try:
             row[2] = row[2].replace('/', '-')
+            row[2] = row[2].replace('Pgto', '').strip()
         except Exception as e:
             Log.log_error(f"Unable to clean data of {row[0]} in column Pagamento com. Row: {row}", e)
 
