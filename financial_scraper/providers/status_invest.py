@@ -164,5 +164,3 @@ class StatusInvestProvider():
         self.sector = sector
         self._config_step()
         self._make_request()
-        self._read_page_and_get_data()
-        self._transform_data_into_csv()
