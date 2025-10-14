@@ -1,5 +1,5 @@
 # Examples of using the market_scraper library
-from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider, InvestorTenBsProvider
+from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
