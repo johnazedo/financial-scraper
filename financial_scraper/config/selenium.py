@@ -18,6 +18,15 @@ class Selenium():
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True,
+            "profile.default_content_settings.popups": 0,
+            "profile.content_settings.exceptions.automatic_downloads.*.setting": 1,
+            "safebrowsing.disable_download_protection": True,
+            "browser.download.folderList": 2,
+            "browser.helperApps.neverAsk.saveToDisk": "application/csv,text/csv,application/vnd.ms-excel"
         }
         options.add_experimental_option('prefs', prefs)
+        
+        # Disable the "Save As" dialog and enable downloads in headless mode
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
         return options

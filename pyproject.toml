@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "financial-scraper"
-version = "1.0.4"
+version = "1.0.5"
 description = "A Python-based web scraping tool for collecting financial data from multiple sources"
 authors = ["João Pedro Limão <jplimao077@gmail.com>"]
 readme = "README.md"

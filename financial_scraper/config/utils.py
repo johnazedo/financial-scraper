@@ -9,7 +9,7 @@ class Log():
         caller_function = inspect.stack()[2].function
         caller_self = caller_frame.f_locals.get('self', None)
         if caller_self:
-            return f"[{caller_self.__class__.__name__}] {caller_function.upper()}"
+            return f"[{caller_self.__class__.__name__}] {Log._remove_leading_underscore(caller_function).upper()}."
         else:
             return f"[No Class] {caller_function.upper()}"
 
@@ -22,6 +22,10 @@ class Log():
         print(f'{caller}: {msg}')
         print(f'Root cause: {error}')
 
+    def _remove_leading_underscore(text: str) -> str:
+        if text.startswith("_"):
+            return text[1:]
+        return text
 
 def check_if_file_was_downloaded(filename: str, timeout: int, download_path: str) -> bool:
     found = False

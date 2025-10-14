@@ -9,8 +9,27 @@ from enum import Enum
 
 
 class StatusInvestProvider():
+    """
+    Provider for scraping stock data from Status Invest website.
+    
+    This class uses Selenium WebDriver to navigate to Status Invest's advanced search page,
+    filter stocks by sector (if specified), and download stock data in CSV format.
+    
+    Attributes:
+        download_path (str): Directory where the downloaded CSV will be saved.
+        filename (str, optional): Custom filename for the downloaded CSV.
+        show_browser (bool): Whether to show the browser window during scraping.
+        sector (Sector): Sector filter to apply during the search.
+    """
 
     class Sector(Enum):
+        """
+        Enumeration of stock market sectors available on Status Invest.
+        
+        Each enum value is a tuple containing:
+        - First element: URL/filename-friendly sector name
+        - Second element: Display name as shown on Status Invest website
+        """
         CYCLIC_CONSUMPTION = ("cyclic-consumption", "Consumo Cíclico")
         NON_CYCLIC_CONSUMPTION = ("non-cyclic-consumption", "Consumo não Cíclico")
         PUBLIC_UTILITIES = ("public-utilities", "Utilidade Pública")
@@ -30,23 +49,33 @@ class StatusInvestProvider():
     _NO_SECTOR = ""
 
     def __init__(self, download_path: str, filename: str = None, show_browser: bool = False):
+        """
+        Initialize the StatusInvestProvider.
+        
+        Args:
+            download_path (str): Directory path where downloaded files will be saved.
+            filename (str, optional): Custom filename for the downloaded CSV file.
+                If None, a default filename based on sector will be used.
+            show_browser (bool, optional): Whether to show the browser window during execution.
+                Defaults to False (headless mode).
+        """
         super().__init__()
         self.filename = filename
         self.download_path = download_path
         self.show_browser = show_browser
 
-    def config_step(self):
+    def _config_step(self):
         Log.log("Start")
         options = Selenium.get_options(self.download_path, self.show_browser)
         self.driver = webdriver.Chrome(options=options)
 
-    def make_request(self):
+    def _make_request(self):
         Log.log("Start")
         self.driver.get(self._URL)
 
         try:
             if (self.sector != StatusInvestProvider.Sector.UNDEFINED):
-                self.select_sector()
+                self._select_sector()
 
             Log.log("Get search button")
             search_button = WebDriverWait(self.driver, 10).until(
@@ -80,12 +109,6 @@ class StatusInvestProvider():
         finally:
             self.driver.quit()
 
-    def read_page_and_get_data(self):
-        Log.log("Skip read page and get data step")
-
-    def transform_data_into_csv(self):
-        Log.log("Skip transform data into csv")
-
     def _rename_file(self):
         # TODO: Make this more readeble
         sector_string = self._NO_SECTOR
@@ -101,7 +124,7 @@ class StatusInvestProvider():
         old_path = f"{self.download_path}/{self._STATUSINVEST_CSV_ORIGIN_FILENAME}"
         os.rename(old_path, new_path)
 
-    def select_sector(self):
+    def _select_sector(self):
         Log.log(f"Select sector {self.sector}")
         Log.log("Search for dropdown-item Sectors")
         span_element = WebDriverWait(self.driver, 10).until(
@@ -125,8 +148,19 @@ class StatusInvestProvider():
         option.click()
 
     def run(self, sector: Sector = Sector.UNDEFINED):
+        """
+        Execute the complete scraping process to fetch stock data.
+        
+        This is the main public method to run the scraper. It configures the WebDriver,
+        navigates to the website, applies filters, downloads the data, and processes it.
+        
+        Args:
+            sector (Sector, optional): Specific sector to filter stocks by.
+                Defaults to Sector.UNDEFINED (no sector filter).
+                
+        Returns:
+            None: The results are saved as a CSV file in the download_path.
+        """
         self.sector = sector
-        self.config_step()
-        self.make_request()
-        self.read_page_and_get_data()
-        self.transform_data_into_csv()
+        self._config_step()
+        self._make_request()
