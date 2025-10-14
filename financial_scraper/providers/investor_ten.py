@@ -70,7 +70,6 @@ class InvestorTenProvider():
 
             ticker = cols[0].select_one(".ticker-name").get_text(strip=True)
             vector_cols = [col.get_text(strip=True) for col in cols]
-            Log.log(f"Extracted columns: {cols}")
             if vector_cols:
                 vector_cols[0] = ticker
                 cleaned = self._clean_data(vector_cols)
