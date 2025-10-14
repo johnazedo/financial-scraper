@@ -67,7 +67,9 @@ class InvestorTenProvider():
     def _transform_data_into_csv(self):
         Log.log("Start")
         headers = ["FII", "Data Com", "Data Pagamento", "Tipo", "Valor"]
-        path = f"{self.download_path}/{self._FILENAME}"
+        path = f"{self.download_path}/{self._FILENAME.replace(':year:', self.year)}"
+        if self.filename:
+            path = f"{self.download_path}/{self.filename}"
         with open(path, "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=';')
             writer.writerow(headers)
