@@ -49,7 +49,7 @@ class InvestorTenProvider():
             self.response = response.text
         except Exception as e:
             Log.log_error(f"Error making request for {self.month} {self.year}", e)
-            return None
+            raise e
 
         try:
             soup = BeautifulSoup(self.response, 'html.parser')
@@ -59,6 +59,7 @@ class InvestorTenProvider():
                 return
         except Exception as e:
             Log.log_error(f"Error parsing HTML for {self.month} {self.year}", e)
+            raise e
 
     def _read_page_and_get_data(self):
         rows = self.table.select("tbody tr")
@@ -102,7 +103,10 @@ class InvestorTenProvider():
         self.result = []
         for month in self._MONTHS:
             self.month = month
-            self._make_request()
+            try:
+                self._make_request()
+            except:
+                continue
             self._read_page_and_get_data()
         self._transform_data_into_csv()
 
