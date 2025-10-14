@@ -7,6 +7,18 @@ from services.settings import Log
 
 
 class InvestorTenProvider():
+    """
+    A provider for scraping Real Estate Investment Trust (FIIS) dividend data from Investidor10 website.
+    
+    This class retrieves information about dividends paid by Brazilian REITs (FIIs) 
+    for specified years and months. The data is collected from the Investidor10 
+    website and saved into a CSV file.
+    
+    Attributes:
+        download_path (str): Directory path where the CSV file will be saved.
+        filename (str, optional): Custom filename for the output CSV file.
+                                 If not provided, defaults to 'funds-{year}.csv'.
+    """
 
     _URL = "https://investidor10.com.br/fiis/dividendos/:year:/:month:/"
     _MONTHS = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho",
@@ -77,6 +89,16 @@ class InvestorTenProvider():
             Log.log(f"Create file {path}")
 
     def run(self, year: str):
+        """
+        Run the scraping process for a specific year.
+        
+        This is the main method to execute the scraping process. It iterates through
+        all months of the specified year, collects dividend data for each month,
+        and saves the results to a CSV file.
+        
+        Args:
+            year (str): The year to collect dividend data for (e.g., "2023").
+        """
         self.year = year
         self.result = []
         for month in self._MONTHS:

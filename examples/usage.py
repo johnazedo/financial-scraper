@@ -28,13 +28,27 @@ def fundamentus_example():
 
 
 def investor_ten_example():
-    # Initialize the service with Investor10 provider
+    """
+    Example showing how to use the InvestorTenProvider to scrape REIT (FII) dividend data
+    from Investidor10 website for a specific year.
+    """
+    # Initialize the provider with default filename (funds-{year}.csv)
     service = InvestorTenProvider(
         download_path=BASE_DIR
     )
 
-    # Fetch and save data
-    service.run("2024")
+    # Fetch and save data for 2023
+    # This will create a file named 'funds-2023.csv'
+    service.run("2023")
+    
+    # Example with custom filename
+    service_custom = InvestorTenProvider(
+        download_path=BASE_DIR,
+        filename="fiis-dividends-2024.csv"
+    )
+    
+    # Fetch and save data for 2024 with custom filename
+    service_custom.run("2024")
 
 
 if __name__ == "__main__":
