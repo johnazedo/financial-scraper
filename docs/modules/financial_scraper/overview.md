@@ -25,6 +25,7 @@ financial_scraper/
 └── providers/               # Web scraping providers
     ├── __init__.py
     ├── fundamentus.py       # Fundamentus data provider
+    ├── investor_ten.py      # Investidor10 data provider
     └── status_invest.py     # Status Invest data provider
 ```
 
@@ -47,6 +48,15 @@ The `FundamentusProvider` class in `fundamentus.py` scrapes stock data from the 
 - Direct HTTP requests with the requests library
 - Converts HTML tables to pandas DataFrames
 - Saves data in CSV format with date-stamped filenames
+
+### InvestorTen Provider
+
+The `InvestorTenProvider` class in `investor_ten.py` scrapes REIT (FII) dividend data from the Investidor10 website:
+
+- Retrieves dividend information for Brazilian REITs for a specified year
+- Collects data month by month across the entire year
+- Uses Beautiful Soup for HTML parsing
+- Saves data in a structured CSV format with customizable filename
 
 ## Configuration Modules
 

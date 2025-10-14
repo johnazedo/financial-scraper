@@ -7,8 +7,10 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
 - Scrapes financial data from multiple sources:
   - FundsExplorer
   - StatusInvest
+  - Investidor10
 - Collects information about:
   - Stocks
+  - REITs (Brazilian FIIs) dividends
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
 
@@ -44,6 +46,10 @@ poetry run example_status_invest
 
 ```bash
 poetry run example_fundamentus
+```
+
+```bash
+poetry run example_investor_ten
 ```
 
 ### Python API
@@ -87,6 +93,31 @@ provider = FundamentusProvider(
 
 # Fetch and save data
 provider.run()
+```
+
+#### Using the InvestorTen Provider
+
+```python
+from financial_scraper import InvestorTenProvider
+import os
+
+# Set the download path
+download_path = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize the provider
+provider = InvestorTenProvider(
+    download_path=download_path,
+)
+
+# Fetch REIT dividend data for a specific year
+provider.run(year="2023")
+
+# You can also specify a custom filename for the output
+provider = InvestorTenProvider(
+    download_path=download_path,
+    filename="fiis-dividends-2023.csv"
+)
+provider.run(year="2023")
 ```
 
 
