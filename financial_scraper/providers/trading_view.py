@@ -9,7 +9,23 @@ class TradingViewProvider():
 
     _SYMBOL = ":stock:"
     _URL = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/"
+    _URL_STATISTICS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-statistics-and-ratios/"
+    _URL_DEMOSTRATIONS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-income-statement/"
     _DEFUALT_FILENAME = "trading_view.csv"
+    # - SEARCH_STRING - HEADER
+
+    _reference = {
+        "stock": "STOCK",
+        "": "P/L",
+        "": "EV",
+        "": "P/PV",
+        "": "ROE",
+        "": "ROIC",
+        "": "Margem Ebit",
+        "": "Margem Líquida",
+        "": "EBIT",
+    }
+    # SERACH_STRING, HEADER, STOCK and VALUE
 
     def __init__(self, download_path: str, filename: str = None):
         super().__init__(download_path, filename)
