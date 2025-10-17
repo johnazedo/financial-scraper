@@ -21,6 +21,7 @@ def fundamentus_example():
     # Initialize the service with Fundamentus provider
     service = FundamentusProvider(
         download_path=BASE_DIR,
+        filename="fundamentus_stocks.csv"
     )
 
     # Fetch and save data
