@@ -6,6 +6,18 @@ from financial_scraper.config.utils import Log
 
 
 class TradingViewProvider():
+    """
+    A provider for scraping stock information from TradingView website.
+    
+    This class retrieves basic information about stocks from the Brazilian stock market
+    (B3/BMFBOVESPA) including stock name, department/sector, and logo image URL.
+    The data is collected from the TradingView website and saved into a CSV file.
+    
+    Attributes:
+        download_path (str): Directory path where the CSV file will be saved.
+        filename (str, optional): Custom filename for the output CSV file.
+                                 If not provided, defaults to 'trading_view.csv'.
+    """
 
     _SYMBOL = ":stock:"
     _URL = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/"
@@ -15,6 +27,14 @@ class TradingViewProvider():
     # - SEARCH_STRING - HEADER
 
     def __init__(self, download_path: str, filename: str = None):
+        """
+        Initialize the TradingViewProvider with a download path and optional filename.
+        
+        Args:
+            download_path (str): Directory path where the CSV file will be saved.
+            filename (str, optional): Custom filename for the output CSV file.
+                                      If not provided, defaults to 'trading_view.csv'.
+        """
         self.download_path = download_path
         self.filename = filename if filename else self._DEFUALT_FILENAME
 
@@ -71,6 +91,21 @@ class TradingViewProvider():
             f.writelines(self.lines)
 
     def run(self, stocks: List[str]):
+        """
+        Run the scraping process for a list of stock tickers.
+        
+        This is the main method to execute the scraping process. It iterates through
+        the provided list of stock tickers, collects information for each stock,
+        and saves the results to a CSV file.
+        
+        Args:
+            stocks (List[str]): A list of stock ticker symbols to collect data for.
+                               These should be valid B3/BMFBOVESPA stock symbols.
+                               
+        Example:
+            >>> provider = TradingViewProvider(download_path="./data")
+            >>> provider.run(stocks=["PETR4", "VALE3", "ITUB4"])
+        """
         self._config_step()
         for stock in stocks:
             self.stock = stock

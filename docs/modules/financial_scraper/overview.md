@@ -26,7 +26,8 @@ financial_scraper/
     ├── __init__.py
     ├── fundamentus.py       # Fundamentus data provider
     ├── investor_ten.py      # Investidor10 data provider
-    └── status_invest.py     # Status Invest data provider
+    ├── status_invest.py     # Status Invest data provider
+    └── trading_view.py      # TradingView data provider
 ```
 
 ## Provider Modules
@@ -57,6 +58,16 @@ The `InvestorTenProvider` class in `investor_ten.py` scrapes REIT (FII) dividend
 - Collects data month by month across the entire year
 - Uses Beautiful Soup for HTML parsing
 - Saves data in a structured CSV format with customizable filename
+
+### TradingView Provider
+
+The `TradingViewProvider` class in `trading_view.py` scrapes stock information from the TradingView website:
+
+- Retrieves basic stock information from the Brazilian stock market (B3/BMFBOVESPA)
+- Collects company names, sectors, and logo image URLs
+- Uses Beautiful Soup for HTML parsing
+- Processes multiple stock tickers in a single run
+- Saves data in a CSV format with customizable filename
 
 ## Configuration Modules
 
