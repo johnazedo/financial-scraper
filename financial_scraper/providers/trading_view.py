@@ -15,18 +15,18 @@ class TradingViewProvider():
     # - SEARCH_STRING - HEADER
 
     def __init__(self, download_path: str, filename: str = None):
-        super().__init__(download_path, filename)
         self.download_path = download_path
         self.filename = filename if filename else self._DEFUALT_FILENAME
 
     def _config_step(self):
         Log.log("Start")
-        HEADER = "STOCK;NAME;DEPARTMENT;IMAGE\n"
+        self.HEADER = "STOCK;NAME;DEPARTMENT;IMAGE\n"
         self.lines = []
 
     def _make_request(self):
         url = self._URL.replace(self._SYMBOL, self.stock)
         response: Response = requests.get(url)
+        Log.log(f"Making request for {self.stock}")
 
         if response.status_code == 200:
             html = response.text
@@ -41,6 +41,8 @@ class TradingViewProvider():
             Log.log("Skip step")
             return
 
+        Log.log(f"Reading page and getting data for {self.stock}")
+
         img_tag = self.page.select_one('img[class*="logo-"]')
         image = img_tag["src"]
 
@@ -50,7 +52,7 @@ class TradingViewProvider():
         prefix = "/markets/stocks-brazil/sectorandindustry-sector/"
         department_tag = self.page.select_one(f'a[href^="{prefix}"]')
 
-        if department_tag == None:
+        if department_tag is None:
             department = ""
         else:
             department = department_tag.get_text(strip=True)
@@ -61,6 +63,12 @@ class TradingViewProvider():
         if not self.lines:
             Log.log("No data to write")
             return
+
+        file_path = f"{self.download_path}/{self.filename}"
+        Log.log(f"Writing data to CSV at {file_path}")
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(self.HEADER)
+            f.writelines(self.lines)
 
     def run(self, stocks: List[str]):
         self._config_step()

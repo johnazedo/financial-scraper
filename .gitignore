@@ -194,4 +194,5 @@ pyrightconfig.json
 *.csv
 
 !downloads
-!examples/stocks_for_trading_view_example.csv# End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
+!examples/stocks_for_trading_view_example.csv
+# End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
