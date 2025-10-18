@@ -1,5 +1,5 @@
 # Examples of using the market_scraper library
-from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider
+from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider, TradingViewProvider
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,15 +41,30 @@ def investor_ten_example():
     # Fetch and save data for 2023
     # This will create a file named 'funds-2023.csv'
     service.run("2023")
-    
+
     # Example with custom filename
     service_custom = InvestorTenProvider(
         download_path=BASE_DIR,
         filename="fiis-dividends-2024.csv"
     )
-    
+
     # Fetch and save data for 2024 with custom filename
     service_custom.run("2024")
+
+
+def trading_view_example():
+    # Get stocks list (in this example we use the csv get by status_invest_example)
+    stocks_file = os.path.join(BASE_DIR, "stocks_for_trading_view_example.csv")
+    with open(stocks_file, "r") as f:
+        stocks = [line.split(";")[0] for line in f.readlines()[1:]]  # Skip header
+    stocks = stocks[:10]
+
+    # Initialize the service with Trading View provider
+    service = TradingViewProvider(
+        download_path=BASE_DIR,
+        filename="trading_view_stocks.csv"
+    )
+    service.run(stocks=stocks)
 
 
 if __name__ == "__main__":

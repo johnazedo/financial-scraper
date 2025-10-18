@@ -8,9 +8,11 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
   - FundsExplorer
   - StatusInvest
   - Investidor10
+  - TradingView
 - Collects information about:
   - Stocks
   - REITs (Brazilian FIIs) dividends
+  - Stock details from TradingView (name, sector, logo)
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
 
@@ -50,6 +52,10 @@ poetry run example_fundamentus
 
 ```bash
 poetry run example_investor_ten
+```
+
+```bash
+poetry run example_trading_view
 ```
 
 ### Python API
@@ -120,6 +126,31 @@ provider = InvestorTenProvider(
 provider.run(year="2023")
 ```
 
+#### Using the TradingView Provider
+
+```python
+from financial_scraper import TradingViewProvider
+import os
+
+# Set the download path
+download_path = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize the provider
+provider = TradingViewProvider(
+    download_path=download_path,
+)
+
+# Fetch stock data for specific tickers
+provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
+
+# You can also specify a custom filename for the output
+provider = TradingViewProvider(
+    download_path=download_path,
+    filename="brazilian_stocks_info.csv"
+)
+provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
+```
+
 
 ## Project Structure
 
@@ -146,7 +177,9 @@ provider.run(year="2023")
 │   └── providers/      # Data providers
 │       ├── __init__.py
 │       ├── fundamentus.py      # Fundamentus scraper
-│       └── status_invest.py    # StatusInvest scraper
+│       ├── investor_ten.py     # Investidor10 scraper
+│       ├── status_invest.py    # StatusInvest scraper
+│       └── trading_view.py     # TradingView scraper
 ```
 
 ## Dependencies
