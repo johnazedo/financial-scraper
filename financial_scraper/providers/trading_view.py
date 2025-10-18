@@ -23,7 +23,7 @@ class TradingViewProvider():
     _URL = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/"
     # _URL_STATISTICS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-statistics-and-ratios/"
     # _URL_DEMOSTRATIONS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-income-statement/"
-    _DEFUALT_FILENAME = "trading_view.csv"
+    _DEFAULT_FILENAME = "trading_view.csv"
     # - SEARCH_STRING - HEADER
 
     def __init__(self, download_path: str, filename: str = None):
@@ -36,7 +36,7 @@ class TradingViewProvider():
                                       If not provided, defaults to 'trading_view.csv'.
         """
         self.download_path = download_path
-        self.filename = filename if filename else self._DEFUALT_FILENAME
+        self.filename = filename if filename else self._DEFAULT_FILENAME
 
     def _config_step(self):
         Log.log("Start")
@@ -64,10 +64,14 @@ class TradingViewProvider():
         Log.log(f"Reading page and getting data for {self.stock}")
 
         img_tag = self.page.select_one('img[class*="logo-"]')
-        image = img_tag["src"]
+        image = ""
+        if img_tag is not None:
+            image = img_tag["src"]
 
         name_tag = self.page.find("h1", class_="apply-overflow-tooltip title-HDE_EEoW")
-        name = name_tag.get_text(strip=True)
+        name = ""
+        if name_tag is not None:
+            name = name_tag.get_text(strip=True)
 
         prefix = "/markets/stocks-brazil/sectorandindustry-sector/"
         department_tag = self.page.select_one(f'a[href^="{prefix}"]')
