@@ -9,35 +9,22 @@ class TradingViewProvider():
 
     _SYMBOL = ":stock:"
     _URL = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/"
-    _URL_STATISTICS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-statistics-and-ratios/"
-    _URL_DEMOSTRATIONS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-income-statement/"
+    # _URL_STATISTICS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-statistics-and-ratios/"
+    # _URL_DEMOSTRATIONS = f"https://br.tradingview.com/symbols/BMFBOVESPA-{_SYMBOL}/financials-income-statement/"
     _DEFUALT_FILENAME = "trading_view.csv"
     # - SEARCH_STRING - HEADER
-
-    _reference = {
-        "stock": "STOCK",
-        "": "P/L",
-        "": "EV",
-        "": "P/PV",
-        "": "ROE",
-        "": "ROIC",
-        "": "Margem Ebit",
-        "": "Margem Líquida",
-        "": "EBIT",
-    }
-    # SERACH_STRING, HEADER, STOCK and VALUE
 
     def __init__(self, download_path: str, filename: str = None):
         super().__init__(download_path, filename)
         self.download_path = download_path
         self.filename = filename if filename else self._DEFUALT_FILENAME
 
-    def config_step(self):
+    def _config_step(self):
         Log.log("Start")
         HEADER = "STOCK;NAME;DEPARTMENT;IMAGE\n"
         self.lines = []
 
-    def make_request(self):
+    def _make_request(self):
         url = self._URL.replace(self._SYMBOL, self.stock)
         response: Response = requests.get(url)
 
@@ -49,7 +36,7 @@ class TradingViewProvider():
             Log.log(f"Failed request with status code {response.status_code} when call for {self.stock}")
             self.execute_next_step = False
 
-    def read_page_and_get_data(self):
+    def _read_page_and_get_data(self):
         if not self.execute_next_step:
             Log.log("Skip step")
             return
@@ -70,15 +57,15 @@ class TradingViewProvider():
 
         self.lines.append(f"{self.stock};{name};{department};{image}\n")
 
-    def transform_data_into_csv(self):
+    def _transform_data_into_csv(self):
         if not self.lines:
             Log.log("No data to write")
             return
 
     def run(self, stocks: List[str]):
-        self.config_step()
+        self._config_step()
         for stock in stocks:
             self.stock = stock
-            self.make_request()
-            self.read_page_and_get_data()
-        self.transform_data_into_csv()
+            self._make_request()
+            self._read_page_and_get_data()
+        self._transform_data_into_csv()
