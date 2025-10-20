@@ -8,6 +8,19 @@ import os
 
 
 class MarketDataService():
+    """
+    A service for downloading comprehensive Brazilian stock market data from dadosdemercado.com.br.
+    
+    This class retrieves a complete list of stocks listed on B3 (Brazil's stock exchange)
+    with their respective information. The data is downloaded as a CSV file and can be 
+    saved with a custom filename.
+    
+    Attributes:
+        download_path (str): Directory path where the CSV file will be saved.
+        filename (str, optional): Custom filename for the output CSV file.
+                                 If not provided, the original filename is used.
+        show_browser (bool): Whether to show the browser window during scraping.
+    """
 
     _URL = "https://www.dadosdemercado.com.br/acoes"
     _MARKETDATA_CSV_ORIGIN_FILENAME = "acoes-listadas-b3.csv"
@@ -66,6 +79,18 @@ class MarketDataService():
             os.rename(origin_file_path, os.path.join(self.download_path, self.filename))
 
     def run(self):
+        """
+        Run the complete process to download stock market data.
+        
+        This is the main method that executes the entire workflow:
+        1. Configure the Selenium WebDriver
+        2. Make a request to the website and download the CSV file
+        3. Rename the file if a custom filename was provided
+        
+        Example:
+            >>> service = MarketDataService(download_path="./data")
+            >>> service.run()
+        """
         self.config_step()
         self.make_request()
         self.transform_data_into_csv()

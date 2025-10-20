@@ -9,10 +9,12 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
   - StatusInvest
   - Investidor10
   - TradingView
+  - DadosDeMercado
 - Collects information about:
   - Stocks
   - REITs (Brazilian FIIs) dividends
   - Stock details from TradingView (name, sector, logo)
+  - Complete list of stocks from B3 (Brazilian stock exchange)
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
 
@@ -56,6 +58,10 @@ poetry run example_investor_ten
 
 ```bash
 poetry run example_trading_view
+```
+
+```bash
+poetry run example_market_data
 ```
 
 ### Python API
@@ -151,6 +157,32 @@ provider = TradingViewProvider(
 provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
 ```
 
+#### Using the MarketData Provider
+
+```python
+from financial_scraper import MarketDataService
+import os
+
+# Set the download path
+download_path = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize the provider
+provider = MarketDataService(
+    download_path=download_path,
+)
+
+# Download the complete list of B3 stocks
+provider.run()
+
+# You can also specify a custom filename for the output
+provider = MarketDataService(
+    download_path=download_path,
+    filename="b3_stocks_list.csv",
+    show_browser=True  # Set to True to see the browser during execution
+)
+provider.run()
+```
+
 
 ## Project Structure
 
@@ -178,6 +210,7 @@ provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
 │       ├── __init__.py
 │       ├── fundamentus.py      # Fundamentus scraper
 │       ├── investor_ten.py     # Investidor10 scraper
+│       ├── market_data.py      # DadosDeMercado scraper
 │       ├── status_invest.py    # StatusInvest scraper
 │       └── trading_view.py     # TradingView scraper
 ```
@@ -196,6 +229,10 @@ provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
 ## License
 
 This project is licensed under the terms of the LICENSE file included in the repository.
+
+## Documentation
+
+The documentation for this project, including code comments and provider-specific guides, was enhanced using AI assistance. The AI helped to create comprehensive docstrings, usage examples, and module explanations to make the codebase more accessible to contributors and users.
 
 ## Contributing
 
