@@ -48,7 +48,8 @@ class MarketDataService():
             Log.log(f"Save file in {self.download_path}")
 
             timeout = 30
-            is_file_downloaded = check_if_file_was_downloaded(self._MARKETDATA_CSV_ORIGIN_FILENAME, timeout)
+            is_file_downloaded = check_if_file_was_downloaded(
+                self._MARKETDATA_CSV_ORIGIN_FILENAME, timeout, self.download_path)
             if is_file_downloaded:
                 Log.log("Download completed!")
             else:
