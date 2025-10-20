@@ -61,6 +61,11 @@ provider = StatusInvestProvider(download_path="/path/to/downloads")
 # Download all stocks
 provider.run()
 
+provider = StatusInvestProvider(
+    download_path="/path/to/downloads",
+    filename="financial_stocks.csv"
+)
+
 # Download stocks from specific sector
 provider.run(sector=StatusInvestProvider.Sector.FINANCIAL_AND_OTHERS)
 ```
