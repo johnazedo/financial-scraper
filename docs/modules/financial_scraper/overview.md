@@ -26,6 +26,7 @@ financial_scraper/
     ├── __init__.py
     ├── fundamentus.py       # Fundamentus data provider
     ├── investor_ten.py      # Investidor10 data provider
+    ├── market_data.py       # DadosDeMercado data provider
     ├── status_invest.py     # Status Invest data provider
     └── trading_view.py      # TradingView data provider
 ```
@@ -68,6 +69,16 @@ The `TradingViewProvider` class in `trading_view.py` scrapes stock information f
 - Uses Beautiful Soup for HTML parsing
 - Processes multiple stock tickers in a single run
 - Saves data in a CSV format with customizable filename
+
+### MarketData Provider
+
+The `MarketDataService` class in `market_data.py` downloads a comprehensive list of stocks from the DadosDeMercado website:
+
+- Downloads the complete list of stocks listed on B3 (Brazilian stock exchange)
+- Uses Selenium for browser automation
+- Handles file downloads and renaming
+- Provides options for headless or visible browser operation
+- Supports custom filename for the output CSV
 
 ## Configuration Modules
 

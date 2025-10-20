@@ -42,6 +42,7 @@ example_status_invest = "examples.usage:status_invest_example"
 example_fundamentus = "examples.usage:fundamentus_example"
 example_investor_ten = "examples.usage:investor_ten_example"
 example_trading_view = "examples.usage:trading_view_example"
+example_market_data = "examples.usage:market_data_example"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
