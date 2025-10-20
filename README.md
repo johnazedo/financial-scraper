@@ -160,14 +160,14 @@ provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
 #### Using the MarketData Provider
 
 ```python
-from financial_scraper import MarketDataService
+from financial_scraper import MarketDataProvider
 import os
 
 # Set the download path
 download_path = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize the provider
-provider = MarketDataService(
+provider = MarketDataProvider(
     download_path=download_path,
 )
 
@@ -175,7 +175,7 @@ provider = MarketDataService(
 provider.run()
 
 # You can also specify a custom filename for the output
-provider = MarketDataService(
+provider = MarketDataProvider(
     download_path=download_path,
     filename="b3_stocks_list.csv",
     show_browser=True  # Set to True to see the browser during execution

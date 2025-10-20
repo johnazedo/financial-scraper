@@ -72,7 +72,7 @@ The `TradingViewProvider` class in `trading_view.py` scrapes stock information f
 
 ### MarketData Provider
 
-The `MarketDataService` class in `market_data.py` downloads a comprehensive list of stocks from the DadosDeMercado website:
+The `MarketDataProvider` class in `market_data.py` downloads a comprehensive list of stocks from the DadosDeMercado website:
 
 - Downloads the complete list of stocks listed on B3 (Brazilian stock exchange)
 - Uses Selenium for browser automation

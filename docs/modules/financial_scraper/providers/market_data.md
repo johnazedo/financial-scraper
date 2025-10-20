@@ -1,6 +1,6 @@
 # MarketData Provider
 
-The `MarketDataService` allows you to download a comprehensive list of stocks from B3 (Brazilian stock exchange) using the DadosDeMercado website.
+The `MarketDataProvider` allows you to download a comprehensive list of stocks from B3 (Brazilian stock exchange) using the DadosDeMercado website.
 
 ## Overview
 
@@ -18,14 +18,14 @@ The provider uses Selenium to interact with the website, click on the download b
 ### Basic Usage
 
 ```python
-from financial_scraper import MarketDataService
+from financial_scraper import MarketDataProvider
 import os
 
 # Set the download path
 download_path = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize the provider
-provider = MarketDataService(
+provider = MarketDataProvider(
     download_path=download_path,
 )
 
@@ -38,13 +38,13 @@ provider.run()
 You can specify a custom filename for the downloaded CSV:
 
 ```python
-from financial_scraper import MarketDataService
+from financial_scraper import MarketDataProvider
 import os
 
 download_path = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize with custom filename
-provider = MarketDataService(
+provider = MarketDataProvider(
     download_path=download_path,
     filename="b3_stocks_list.csv"
 )
@@ -57,13 +57,13 @@ provider.run()
 By default, the browser runs in headless mode (invisible). If you want to see the browser during execution (useful for debugging):
 
 ```python
-from financial_scraper import MarketDataService
+from financial_scraper import MarketDataProvider
 import os
 
 download_path = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize with visible browser
-provider = MarketDataService(
+provider = MarketDataProvider(
     download_path=download_path,
     show_browser=True
 )

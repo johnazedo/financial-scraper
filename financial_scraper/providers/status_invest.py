@@ -7,14 +7,16 @@ from selenium.webdriver.common.by import By
 import os
 from enum import Enum
 
+# TODO: Use builder pattern here and in others providers
+
 
 class StatusInvestProvider():
     """
     Provider for scraping stock data from Status Invest website.
-    
+
     This class uses Selenium WebDriver to navigate to Status Invest's advanced search page,
     filter stocks by sector (if specified), and download stock data in CSV format.
-    
+
     Attributes:
         download_path (str): Directory where the downloaded CSV will be saved.
         filename (str, optional): Custom filename for the downloaded CSV.
@@ -25,7 +27,7 @@ class StatusInvestProvider():
     class Sector(Enum):
         """
         Enumeration of stock market sectors available on Status Invest.
-        
+
         Each enum value is a tuple containing:
         - First element: URL/filename-friendly sector name
         - Second element: Display name as shown on Status Invest website
@@ -51,7 +53,7 @@ class StatusInvestProvider():
     def __init__(self, download_path: str, filename: str = None, show_browser: bool = False):
         """
         Initialize the StatusInvestProvider.
-        
+
         Args:
             download_path (str): Directory path where downloaded files will be saved.
             filename (str, optional): Custom filename for the downloaded CSV file.
@@ -147,17 +149,18 @@ class StatusInvestProvider():
         Log.log(f"Click to {self.sector}")
         option.click()
 
+    # TODO: Add filename in this function as a optional parameter
     def run(self, sector: Sector = Sector.UNDEFINED):
         """
         Execute the complete scraping process to fetch stock data.
-        
+
         This is the main public method to run the scraper. It configures the WebDriver,
         navigates to the website, applies filters, downloads the data, and processes it.
-        
+
         Args:
             sector (Sector, optional): Specific sector to filter stocks by.
                 Defaults to Sector.UNDEFINED (no sector filter).
-                
+
         Returns:
             None: The results are saved as a CSV file in the download_path.
         """
