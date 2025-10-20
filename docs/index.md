@@ -7,8 +7,13 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
 - Scrapes financial data from multiple sources:
   - FundsExplorer
   - StatusInvest
+  - DadosDeMercado
+  - TrandingView
+  - Fundamentus
 - Collects information about:
   - Stocks
+  - REITs (Brazilian FIIs) dividends
+  - Stock details (name, sector, logo)
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
 

@@ -9,7 +9,7 @@ import os
 # TODO: Change name to MarketDataProvider
 
 
-class MarketDataService():
+class MarketDataProvider():
     """
     A service for downloading comprehensive Brazilian stock market data from dadosdemercado.com.br.
 
@@ -29,7 +29,7 @@ class MarketDataService():
 
     def __init__(self, download_path: str, filename: str = None, show_browser: bool = False):
         """
-        Initialize the MarketDataService.
+        Initialize the MarketDataProvider.
 
         Args:
             download_path (str): Directory path where downloaded files will be saved.
@@ -90,7 +90,7 @@ class MarketDataService():
         3. Rename the file if a custom filename was provided
 
         Example:
-            >>> service = MarketDataService(download_path="./data")
+            >>> service = MarketDataProvider(download_path="./data")
             >>> service.run()
         """
         self.config_step()
