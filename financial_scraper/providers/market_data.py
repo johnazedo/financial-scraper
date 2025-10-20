@@ -6,15 +6,17 @@ from financial_scraper.config.selenium import Selenium
 from financial_scraper.config.utils import Log, check_if_file_was_downloaded
 import os
 
+# TODO: Change name to MarketDataProvider
+
 
 class MarketDataService():
     """
     A service for downloading comprehensive Brazilian stock market data from dadosdemercado.com.br.
-    
+
     This class retrieves a complete list of stocks listed on B3 (Brazil's stock exchange)
     with their respective information. The data is downloaded as a CSV file and can be 
     saved with a custom filename.
-    
+
     Attributes:
         download_path (str): Directory path where the CSV file will be saved.
         filename (str, optional): Custom filename for the output CSV file.
@@ -81,12 +83,12 @@ class MarketDataService():
     def run(self):
         """
         Run the complete process to download stock market data.
-        
+
         This is the main method that executes the entire workflow:
         1. Configure the Selenium WebDriver
         2. Make a request to the website and download the CSV file
         3. Rename the file if a custom filename was provided
-        
+
         Example:
             >>> service = MarketDataService(download_path="./data")
             >>> service.run()
