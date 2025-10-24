@@ -25,6 +25,7 @@ financial_scraper/
 └── providers/               # Web scraping providers
     ├── __init__.py
     ├── fundamentus.py       # Fundamentus data provider
+    ├── funds_explorer.py    # FundsExplorer data provider
     ├── investor_ten.py      # Investidor10 data provider
     ├── market_data.py       # DadosDeMercado data provider
     ├── status_invest.py     # Status Invest data provider
@@ -50,6 +51,16 @@ The `FundamentusProvider` class in `fundamentus.py` scrapes stock data from the 
 - Direct HTTP requests with the requests library
 - Converts HTML tables to pandas DataFrames
 - Saves data in CSV format with date-stamped filenames
+
+### FundsExplorer Provider
+
+The `FundsExplorerProvider` class in `funds_explorer.py` scrapes REIT (FII) ranking data from the FundsExplorer website:
+
+- Retrieves comprehensive ranking information for Brazilian REITs
+- Collects financial metrics including prices, dividend yields, P/VP ratios, and liquidity
+- Uses Selenium for browser automation to handle dynamic content
+- Configurable wait time for page loading
+- Saves data in CSV format with customizable filename
 
 ### InvestorTen Provider
 

@@ -1,5 +1,7 @@
 # Examples of using the market_scraper library
-from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider, TradingViewProvider, MarketDataService
+from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider
+from financial_scraper import FundsExplorerProvider, TradingViewProvider, MarketDataProvider
+
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -69,9 +71,21 @@ def trading_view_example():
 
 def market_data_example():
     # Initialize the service with Market Data provider
-    service = MarketDataService(
+    service = MarketDataProvider(
         download_path=BASE_DIR,
         filename="market_data_stocks.csv",
+        show_browser=True
+    )
+
+    # Fetch and save data
+    service.run()
+
+
+def funds_explorer_example():
+    # Initialize the service with Funds Explorer provider
+    service = FundsExplorerProvider(
+        download_path=BASE_DIR,
+        filename="funds_explorer.csv",
         show_browser=True
     )
 
@@ -83,3 +97,6 @@ if __name__ == "__main__":
     status_invest_example()
     fundamentus_example()
     investor_ten_example()
+    trading_view_example()
+    market_data_example()
+    funds_explorer_example()
