@@ -11,4 +11,4 @@ from .providers.funds_explorer import FundsExplorerProvider
 
 __version__ = "1.0.0"
 __all__ = ['StatusInvestProvider', 'FundamentusProvider',
-           'InvestorTenProvider', 'TradingViewProvider', 'MarketDataService']
+           'InvestorTenProvider', 'TradingViewProvider', 'MarketDataProvider',  'FundsExplorerProvider']
