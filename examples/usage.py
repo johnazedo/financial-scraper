@@ -79,7 +79,22 @@ def market_data_example():
     service.run()
 
 
+def funds_explorer_example():
+    # Initialize the service with Funds Explorer provider
+    service = FundsExplorerProvider(
+        download_path=BASE_DIR,
+        filename="funds_explorer.csv",
+        show_browser=True
+    )
+
+    # Fetch and save data
+    service.run()
+
+
 if __name__ == "__main__":
     status_invest_example()
     fundamentus_example()
     investor_ten_example()
+    trading_view_example()
+    market_data_example()
+    funds_explorer_example()
