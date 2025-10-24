@@ -8,10 +8,36 @@ from financial_scraper.config.utils import Log
 
 
 class FundsExplorerProvider():
+    """
+    A provider for scraping Real Estate Investment Trust (FII) ranking data from FundsExplorer website.
+    
+    This class retrieves comprehensive information about Brazilian REITs (FIIs) including
+    their rankings, dividend yields, prices, and other financial metrics. The data is collected
+    from the FundsExplorer ranking page and saved into a CSV file.
+    
+    Attributes:
+        download_path (str): Directory path where the CSV file will be saved.
+        filename (str, optional): Custom filename for the output CSV file.
+                                 If not provided, defaults to 'funds-{date}.csv'.
+        show_browser (bool): Whether to show the browser window during scraping.
+        wait_time (int): Time in seconds to wait for the page to fully load. Defaults to 5.
+    """
 
     _FUNDS_EXPLORER_URL: str = "https://www.fundsexplorer.com.br/ranking"
 
     def __init__(self, download_path: str, filename: str = None, show_browser: bool = False, wait_time: int = 5):
+        """
+        Initialize the FundsExplorerProvider with download path and options.
+        
+        Args:
+            download_path (str): Directory path where the CSV file will be saved.
+            filename (str, optional): Custom filename for the output CSV file.
+                                     If None, defaults to 'funds-{date}.csv' format.
+            show_browser (bool, optional): Whether to show the browser window during execution.
+                                          Defaults to False (headless mode).
+            wait_time (int, optional): Time in seconds to wait for the page to fully load.
+                                      Defaults to 5 seconds.
+        """
         self.download_path = download_path
         self.filename = filename
         self.show_browser = show_browser
@@ -73,6 +99,27 @@ class FundsExplorerProvider():
             writer.writerows(self.rows)
 
     def run(self):
+        """
+        Run the complete process to scrape and save FII ranking data.
+        
+        This is the main method that executes the entire workflow:
+        1. Configure the Selenium WebDriver
+        2. Make a request to the FundsExplorer website
+        3. Parse the page and extract FII data from the ranking table
+        4. Save the data to a CSV file
+        
+        The data includes comprehensive information about REITs such as:
+        - Ticker symbols
+        - Current prices
+        - Dividend yields
+        - Liquidity metrics
+        - P/VP ratios
+        - And other financial indicators
+        
+        Example:
+            >>> provider = FundsExplorerProvider(download_path="./data")
+            >>> provider.run()
+        """
         self._config_step()
         self._make_request()
         self._read_page_and_get_data()

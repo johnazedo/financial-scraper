@@ -13,6 +13,7 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
 - Collects information about:
   - Stocks
   - REITs (Brazilian FIIs) dividends
+  - REITs (Brazilian FIIs) rankings and financial metrics
   - Stock details from TradingView (name, sector, logo)
   - Complete list of stocks from B3 (Brazilian stock exchange)
 - Automatically saves data in organized CSV format
@@ -62,6 +63,10 @@ poetry run example_trading_view
 
 ```bash
 poetry run example_market_data
+```
+
+```bash
+poetry run example_funds_explorer
 ```
 
 ### Python API
@@ -188,6 +193,33 @@ provider = MarketDataProvider(
 provider.run()
 ```
 
+#### Using the FundsExplorer Provider
+
+```python
+from financial_scraper import FundsExplorerProvider
+import os
+
+# Set the download path
+download_path = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize the provider
+provider = FundsExplorerProvider(
+    download_path=download_path,
+)
+
+# Fetch FII ranking data
+provider.run()
+
+# You can also specify a custom filename and wait time
+provider = FundsExplorerProvider(
+    download_path=download_path,
+    filename="fiis_ranking.csv",
+    show_browser=True,  # Set to True to see the browser during execution
+    wait_time=10  # Increase wait time if the page loads slowly
+)
+provider.run()
+```
+
 
 ## Project Structure
 
@@ -214,6 +246,7 @@ provider.run()
 │   └── providers/      # Data providers
 │       ├── __init__.py
 │       ├── fundamentus.py      # Fundamentus scraper
+│       ├── funds_explorer.py   # FundsExplorer scraper
 │       ├── investor_ten.py     # Investidor10 scraper
 │       ├── market_data.py      # DadosDeMercado scraper
 │       ├── status_invest.py    # StatusInvest scraper
