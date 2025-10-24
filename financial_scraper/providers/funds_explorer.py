@@ -80,7 +80,7 @@ class FundsExplorerProvider():
         for tr in body_rows:
             cells = [td.get_text(strip=True) for td in tr.select("td,th")]
             self.rows.append(cells)
-        Log.log(f"Load {len(self.rows)} itens")
+        Log.log(f"Load {len(self.rows)} items")
 
     def _transform_data_into_csv(self):
         Log.log("Start")
