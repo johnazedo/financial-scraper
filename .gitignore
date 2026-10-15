@@ -195,4 +195,7 @@ pyrightconfig.json
 
 !downloads
 !examples/stocks_for_trading_view_example.csv
+# Test fixtures: keep these committed so the unit tests are reproducible offline
+!tests/**/*.csv
+!tests/**/*.html
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
