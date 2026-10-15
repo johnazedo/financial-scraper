@@ -82,7 +82,7 @@ class InvestorTenProvider():
         path = f"{self.download_path}/{self._FILENAME.replace(':year:', self.year)}"
         if self.filename:
             path = f"{self.download_path}/{self.filename}"
-        with open(path, "a", newline="", encoding="utf-8") as f:
+        with open(path, "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=';')
             writer.writerow(headers)
             writer.writerows(self.result)

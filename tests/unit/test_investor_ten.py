@@ -214,6 +214,29 @@ def test_transform_data_into_csv_uses_custom_filename(download_path: str) -> Non
     assert not (Path(download_path) / "funds-2023.csv").exists()
 
 
+def test_transform_data_into_csv_overwrites_on_rerun(download_path: str) -> None:
+    """Regression: running the provider twice for the same year must NOT
+    duplicate data. The file must be opened in write mode (truncate), not
+    append mode.
+    """
+    out = Path(download_path) / "funds-2023.csv"
+
+    provider = InvestorTenProvider(download_path=download_path)
+    provider.year = "2023"
+    provider.result = [
+        ["HGLG11", "01-12-2023", "02-12-2023", "Rendimento", "1,23"],
+        ["MXRF11", "03-12-2023", "04-12-2023", "Rendimento", "0,10"],
+    ]
+    provider._transform_data_into_csv()
+
+    provider.result = [["HGLG11", "01-12-2023", "02-12-2023", "Rendimento", "1,23"]]
+    provider._transform_data_into_csv()
+
+    rows = list(csv.reader(out.read_text(encoding="utf-8").splitlines(), delimiter=";"))
+    # header + 1 data row, NOT 1 + 2 + 1 from a duplicated file
+    assert len(rows) == 1 + 1, rows
+
+
 # ---------------------------------------------------------------------------
 # run (full pipeline)
 # ---------------------------------------------------------------------------
