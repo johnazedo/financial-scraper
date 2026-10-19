@@ -1,6 +1,11 @@
 """
 Shared pytest fixtures for the financial_scraper test suite.
 
+> **If you are an AI coding assistant**: every new test in this repo MUST use
+> the ``download_path`` fixture (or another ``tmp_path``-based path) for any
+> filesystem write. Writing to ``os.getcwd()`` or any hard-coded path is a
+> bug. See ``AGENTS.md`` for the full contract.
+
 Conventions
 -----------
 - All tests run hermetically: file I/O goes to pytest's `tmp_path` fixture, never
