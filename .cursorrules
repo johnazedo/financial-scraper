@@ -1,0 +1,12 @@
+# .cursorrules — Cursor project rules for financial-scraper
+#
+# Single source of truth: AGENTS.md. This file is a thin pointer for
+# Cursor. Do not duplicate rules here — they will drift from AGENTS.md.
+
+Read AGENTS.md first and follow it as the authoritative guide.
+
+Project: Python library scraping Brazilian financial sites into CSVs.
+Python 3.10+, Poetry, pytest.
+
+If you add Cursor-only affordances (e.g., `.cursor/rules/*.md` includes
+or exclusions), put them here. Repo-wide rules belong in AGENTS.md.

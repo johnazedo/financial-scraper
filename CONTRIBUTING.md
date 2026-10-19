@@ -126,6 +126,15 @@ To add support for a new financial data source:
 4. Update the main CLI commands to include the new functionality.
 5. Add documentation and examples.
 
+> **Note for AI-assisted contributors**: `AGENTS.md` is the authoritative,
+> AI-focused version of the same guidance. Read it before making changes; it
+> covers the provider contract, testing rules, and what not to do in more
+> detail than this document.
+> **Heads-up**: `pyproject.toml` references a `services/` package that does
+> not yet exist in the repo. If you do not intend to create one, please open
+> an issue or remove the reference from `pyproject.toml` rather than adding
+> an empty `services/` directory.
+
 ## Reporting Bugs
 
 When reporting bugs, please include:

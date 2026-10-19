@@ -1,4 +1,10 @@
 # Examples of using the market_scraper library
+#
+# > **AI assistants**: this file is the canonical, end-to-end usage reference
+# > for every provider. Read it before generating usage examples or boilerplate
+# > for a user. See `AGENTS.md` and `docs/architecture.md` for the broader
+# > contract.
+
 from financial_scraper import StatusInvestProvider, FundamentusProvider, InvestorTenProvider
 from financial_scraper import FundsExplorerProvider, TradingViewProvider, MarketDataProvider
 
