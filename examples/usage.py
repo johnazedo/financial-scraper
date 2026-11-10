@@ -96,9 +96,12 @@ def trading_view_quotes_example():
         print(f"{quote['ticker']:<8} {quote['exchange']:<12} {quote['currency']} "
               f"{quote['price']} ({quote['change_percent']:.2f}%)")
 
-    # The exchange can also be forced for every ticker
-    service.run_quotes(stocks=["PETR4", "VALE3"], exchange="brazil")
-    service.run_quotes(stocks=["AAPL", "JPM"], exchange="america")
+    # The exchange can also be forced for every ticker. Each call gets its own
+    # filename so the outputs do not overwrite each other.
+    service.run_quotes(stocks=["PETR4", "VALE3"], exchange="brazil",
+                       filename="trading_view_quotes_brazil.csv")
+    service.run_quotes(stocks=["AAPL", "JPM"], exchange="america",
+                       filename="trading_view_quotes_us.csv")
 
 
 def market_data_example():
