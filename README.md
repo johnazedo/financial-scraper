@@ -15,6 +15,7 @@ A Python-based web scraping tool for collecting and analyzing financial data fro
   - REITs (Brazilian FIIs) dividends
   - REITs (Brazilian FIIs) rankings and financial metrics
   - Stock details from TradingView (name, sector, logo)
+  - Quotes (price, change, volume, fundamentals) for B3 and US tickers
   - Complete list of stocks from B3 (Brazilian stock exchange)
 - Automatically saves data in organized CSV format
 - Modular architecture for easy extension
@@ -166,6 +167,46 @@ provider = TradingViewProvider(
 )
 provider.run(stocks=["PETR4", "VALE3", "ITUB4", "BBDC4"])
 ```
+
+#### Fetching quotes (price, change, volume) for BR and US tickers
+
+`run_quotes()` resolves a whole list of tickers in **one request per market** and
+returns the rows in memory. Brazilian (B3) and US tickers can be mixed in the
+same call — no API key or account is required.
+
+```python
+from financial_scraper import TradingViewProvider
+
+provider = TradingViewProvider(download_path="./data")
+
+# Mixed B3 and US tickers, resolved automatically
+quotes = provider.run_quotes(stocks=["PETR4", "VALE3", "AAPL", "JPM", "MSFT"])
+
+for quote in quotes:
+    print(quote["ticker"], quote["price"], quote["change_percent"], quote["currency"])
+    # PETR4 45.19 -0.37 BRL
+    # AAPL 350.69 2.43 USD
+```
+
+The quotes are also written to `trading_view_quotes.csv` (configurable with the
+`quotes_filename` constructor argument or the `filename` argument of `run_quotes`).
+
+```python
+# Force every ticker onto a specific exchange
+provider.run_quotes(stocks=["PETR4", "VALE3"], exchange="brazil")
+provider.run_quotes(stocks=["AAPL", "JPM"], exchange="america")
+
+# Force a single exchange
+provider.run_quotes(stocks=["AAPL"], exchange="NASDAQ")
+
+# Tickers can also be qualified explicitly
+provider.run_quotes(stocks=["BMFBOVESPA:PETR4", "NASDAQ:AAPL"])
+```
+
+Returned keys: `ticker`, `company`, `price`, `change_percent`, `change_abs`,
+`volume`, `avg_volume_10d`, `market_cap`, `currency`, `exchange`, `sector`,
+`industry`, `pe_ttm`, `dividend_yield`, `perf_1y`, `perf_1m`, `volatility_d`,
+`symbol` and `market`.
 
 #### Using the MarketData Provider
 

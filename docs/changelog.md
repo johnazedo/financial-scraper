@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `TradingViewProvider.run_quotes()` — bulk quote lookup for **Brazilian (B3) and
+  US tickers** in a single call. Uses the free, key-less TradingView scanner
+  endpoint (one request per market instead of one per ticker), returns the rows
+  in memory and writes them to `trading_view_quotes.csv`.
+- `TradingViewProvider` accepts a `quotes_filename` constructor argument to
+  customize the quotes output file.
+- `poetry run example_trading_view_quotes` — usage example for the new
+  quote lookup.
 - Documentation site with MkDocs
 - `AGENTS.md` as the single source of truth for AI coding assistants
   (Claude Code, OpenCode, Aider, Continue, Cursor, Copilot, etc.).

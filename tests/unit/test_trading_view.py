@@ -3,13 +3,18 @@ Unit tests for ``TradingViewProvider``.
 
 This provider issues one ``GET`` per ticker and parses the response with
 BeautifulSoup. We mock the HTTP layer with ``responses``.
+
+``run_quotes`` is covered separately: it POSTs to the TradingView scanner
+endpoint once per market and returns the parsed rows in memory.
 """
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
+import requests
 import responses
 
 from financial_scraper.providers.trading_view import TradingViewProvider
@@ -273,3 +278,280 @@ def test_provider_extracts_department_and_image_from_captured_page(
         "department should still be extracted from /markets/.../sector/ link"
     )
     assert cells[3].startswith("https://"), "image URL must be absolute"
+
+
+# ---------------------------------------------------------------------------
+# run_quotes (TradingView scanner endpoint)
+# ---------------------------------------------------------------------------
+
+
+def _scanner_url(market: str) -> str:
+    return TradingViewProvider._SCANNER_URL.format(market=market)
+
+
+def _scanner_body(symbol: str, ticker: str, price: float, currency: str = "BRL",
+                  exchange: str = "BMFBOVESPA") -> dict:
+    """Build a scanner response body with one row."""
+    row = {
+        "name": ticker,
+        "description": f"{ticker} description",
+        "close": price,
+        "change": 1.5,
+        "change_abs": 0.75,
+        "volume": 1000,
+        "average_volume_10d_calc": 2000,
+        "market_cap_basic": 5000,
+        "currency": currency,
+        "exchange": exchange,
+        "sector": "Energy Minerals",
+        "industry": "Integrated Oil",
+        "price_earnings_ttm": 7.5,
+        "dividends_yield": 0,
+        "Perf.Y": 12.5,
+        "Perf.1M": -3.5,
+        "Volatility.D": 25.0,
+    }
+    columns = [column for column, _ in TradingViewProvider._QUOTE_FIELDS]
+    return {
+        "totalCount": 1,
+        "data": [{"s": symbol, "d": [row[column] for column in columns]}],
+    }
+
+
+def _register(market: str, body: dict) -> None:
+    responses.add(
+        responses.POST,
+        _scanner_url(market),
+        json=body,
+        status=200,
+    )
+
+
+def _requested_symbols() -> dict[str, list[str]]:
+    """Map scanner URL -> list of tickers sent in the request body."""
+    sent: dict[str, list[str]] = {}
+    for call in responses.calls:
+        market = call.request.url.rstrip("/").split("/")[-2]
+        payload = json.loads(call.request.body)
+        sent.setdefault(market, []).extend(payload["symbols"]["tickers"])
+    return sent
+
+
+@responses.activate
+def test_run_quotes_returns_price_for_br_ticker(download_path: str) -> None:
+    # Given a B3 ticker
+    _register("brazil", _scanner_body("BMFBOVESPA:PETR4", "PETR4", 45.19))
+    _register("america", {"totalCount": 0, "data": []})
+
+    provider = TradingViewProvider(download_path=download_path)
+
+    # When the quotes are fetched
+    quotes = provider.run_quotes(stocks=["PETR4"])
+
+    # Then the price is returned in memory
+    assert len(quotes) == 1
+    assert quotes[0]["ticker"] == "PETR4"
+    assert quotes[0]["price"] == 45.19
+    assert quotes[0]["currency"] == "BRL"
+    assert quotes[0]["symbol"] == "BMFBOVESPA:PETR4"
+    assert quotes[0]["market"] == "brazil"
+
+
+@responses.activate
+def test_run_quotes_returns_price_for_us_ticker(download_path: str) -> None:
+    # Given a US ticker that resolves on NASDAQ
+    _register("brazil", {"totalCount": 0, "data": []})
+    _register("america", _scanner_body("NASDAQ:AAPL", "AAPL", 350.69,
+                                       currency="USD", exchange="NASDAQ"))
+
+    provider = TradingViewProvider(download_path=download_path)
+
+    # When the quotes are fetched
+    quotes = provider.run_quotes(stocks=["AAPL"])
+
+    # Then the US price is returned
+    assert len(quotes) == 1
+    assert quotes[0]["ticker"] == "AAPL"
+    assert quotes[0]["price"] == 350.69
+    assert quotes[0]["currency"] == "USD"
+    assert quotes[0]["exchange"] == "NASDAQ"
+    assert quotes[0]["market"] == "america"
+
+
+@responses.activate
+def test_run_quotes_handles_br_and_us_in_a_single_call(download_path: str) -> None:
+    # Given one Brazilian and one US ticker
+    _register("brazil", _scanner_body("BMFBOVESPA:PETR4", "PETR4", 45.19))
+    _register("america", _scanner_body("NASDAQ:AAPL", "AAPL", 350.69,
+                                       currency="USD", exchange="NASDAQ"))
+
+    provider = TradingViewProvider(download_path=download_path)
+
+    # When the quotes are fetched
+    quotes = provider.run_quotes(stocks=["PETR4", "AAPL"])
+
+    # Then both markets are answered
+    assert {q["ticker"] for q in quotes} == {"PETR4", "AAPL"}
+    assert len(responses.calls) == 2
+
+
+@responses.activate
+def test_run_quotes_probes_every_exchange_for_plain_tickers(download_path: str) -> None:
+    # Given a plain US ticker
+    _register("brazil", {"totalCount": 0, "data": []})
+    _register("america", {"totalCount": 0, "data": []})
+
+    provider = TradingViewProvider(download_path=download_path)
+    provider.run_quotes(stocks=["AAPL"])
+
+    # Then every known exchange is probed so the right one resolves
+    sent = _requested_symbols()
+    assert "BMFBOVESPA:AAPL" in sent["brazil"]
+    for exchange in TradingViewProvider._US_EXCHANGES:
+        assert f"{exchange}:AAPL" in sent["america"]
+
+
+@responses.activate
+def test_run_quotes_keeps_qualified_tickers_untouched(download_path: str) -> None:
+    # Given an already qualified US ticker
+    _register("america", _scanner_body("NASDAQ:AAPL", "AAPL", 350.69,
+                                       currency="USD", exchange="NASDAQ"))
+
+    provider = TradingViewProvider(download_path=download_path)
+    provider.run_quotes(stocks=["NASDAQ:AAPL"])
+
+    # Then only the US market is queried, without probing other exchanges
+    sent = _requested_symbols()
+    assert list(sent.keys()) == ["america"]
+    assert sent["america"] == ["NASDAQ:AAPL"]
+
+
+@responses.activate
+def test_run_quotes_brazil_mode_skips_us_market(download_path: str) -> None:
+    # Given the explicit brazil exchange hint
+    _register("brazil", _scanner_body("BMFBOVESPA:PETR4", "PETR4", 45.19))
+
+    provider = TradingViewProvider(download_path=download_path)
+    provider.run_quotes(stocks=["PETR4"], exchange="brazil")
+
+    # Then only B3 is queried
+    sent = _requested_symbols()
+    assert list(sent.keys()) == ["brazil"]
+    assert sent["brazil"] == ["BMFBOVESPA:PETR4"]
+
+
+@responses.activate
+def test_run_quotes_america_mode_skips_brazil_market(download_path: str) -> None:
+    # Given the explicit america exchange hint
+    _register("america", {"totalCount": 0, "data": []})
+
+    provider = TradingViewProvider(download_path=download_path)
+    provider.run_quotes(stocks=["AAPL"], exchange="america")
+
+    # Then only the US market is queried
+    sent = _requested_symbols()
+    assert list(sent.keys()) == ["america"]
+    assert "NASDAQ:AAPL" in sent["america"]
+    assert "BMFBOVESPA:AAPL" not in sent["america"]
+
+
+@responses.activate
+def test_run_quotes_writes_csv(download_path: str) -> None:
+    # Given a resolved ticker
+    _register("brazil", _scanner_body("BMFBOVESPA:PETR4", "PETR4", 45.19))
+    _register("america", {"totalCount": 0, "data": []})
+
+    provider = TradingViewProvider(download_path=download_path)
+    provider.run_quotes(stocks=["PETR4"])
+
+    # Then the CSV holds the header and the row
+    text = (Path(download_path) / "trading_view_quotes.csv").read_text(encoding="utf-8")
+    lines = text.splitlines()
+    assert lines[0].startswith("TICKER;COMPANY;PRICE;")
+    assert "PETR4" in lines[1]
+    assert "45.19" in lines[1]
+
+
+@responses.activate
+def test_run_quotes_uses_custom_filename(download_path: str) -> None:
+    # Given a custom filename
+    _register("brazil", _scanner_body("BMFBOVESPA:PETR4", "PETR4", 45.19))
+    _register("america", {"totalCount": 0, "data": []})
+
+    provider = TradingViewProvider(download_path=download_path, quotes_filename="mine.csv")
+    provider.run_quotes(stocks=["PETR4"])
+
+    # Then the custom name is used
+    assert (Path(download_path) / "mine.csv").exists()
+    assert not (Path(download_path) / "trading_view_quotes.csv").exists()
+
+
+@responses.activate
+def test_run_quotes_skips_unresolved_tickers(download_path: str) -> None:
+    # Given a ticker the scanner does not know
+    _register("brazil", {"totalCount": 0, "data": []})
+    _register("america", {"totalCount": 0, "data": []})
+
+    provider = TradingViewProvider(download_path=download_path)
+    quotes = provider.run_quotes(stocks=["ZZZZ"])
+
+    # Then no row is produced and no CSV is written
+    assert quotes == []
+    assert not (Path(download_path) / "trading_view_quotes.csv").exists()
+
+
+@responses.activate
+def test_run_quotes_survives_a_network_error(download_path: str) -> None:
+    # Given a failing scanner
+    responses.add(
+        responses.POST,
+        _scanner_url("brazil"),
+        body=requests.ConnectionError("boom"),
+    )
+    responses.add(
+        responses.POST,
+        _scanner_url("america"),
+        body=requests.ConnectionError("boom"),
+    )
+
+    provider = TradingViewProvider(download_path=download_path)
+
+    # When the quotes are fetched
+    quotes = provider.run_quotes(stocks=["PETR4"])
+
+    # Then the provider swallows the error and returns nothing
+    assert quotes == []
+
+
+@responses.activate
+def test_run_quotes_normalizes_class_share_tickers(download_path: str) -> None:
+    # Given a class share ticker written the Yahoo way
+    _register("brazil", {"totalCount": 0, "data": []})
+    _register("america", _scanner_body("NYSE:BRK.B", "BRK.B", 575.25,
+                                       currency="USD", exchange="NYSE"))
+
+    provider = TradingViewProvider(download_path=download_path)
+    quotes = provider.run_quotes(stocks=["BRK_B"])
+
+    # Then it is sent in TradingView's dotted form and resolves
+    sent = _requested_symbols()
+    assert "NYSE:BRK.B" in sent["america"]
+    assert len(quotes) == 1
+    assert quotes[0]["ticker"] == "BRK.B"
+    assert quotes[0]["price"] == 575.25
+
+
+@responses.activate
+def test_run_quotes_keeps_the_best_row_when_a_ticker_matches_twice(download_path: str) -> None:
+    # Given a ticker that resolves on both markets
+    _register("brazil", _scanner_body("BMFBOVESPA:VALE3", "VALE3", 66.11))
+    _register("america", _scanner_body("NASDAQ:VALE3", "VALE3", 12.0,
+                                       currency="USD", exchange="NASDAQ"))
+
+    provider = TradingViewProvider(download_path=download_path)
+    quotes = provider.run_quotes(stocks=["VALE3"])
+
+    # Then the B3 row wins because the ticker looks like a B3 ticker
+    assert len(quotes) == 1
+    assert quotes[0]["market"] == "brazil"
+    assert quotes[0]["price"] == 66.11
