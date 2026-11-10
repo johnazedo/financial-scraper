@@ -75,6 +75,35 @@ def trading_view_example():
     service.run(stocks=stocks)
 
 
+def trading_view_quotes_example():
+    """
+    Example showing how to fetch quotes (price, change, volume, fundamentals)
+    for a list of tickers from Brazil (B3) and/or the United States.
+
+    The whole list is resolved in one request per market, and the rows are
+    returned in memory as well as saved to a CSV file.
+    """
+    # Initialize the provider with a custom filename for the quotes output
+    service = TradingViewProvider(
+        download_path=BASE_DIR,
+        quotes_filename="trading_view_quotes.csv"
+    )
+
+    # Mixed Brazilian and US tickers are resolved automatically
+    quotes = service.run_quotes(stocks=["PETR4", "VALE3", "ITUB4", "AAPL", "JPM", "MSFT"])
+
+    for quote in quotes:
+        print(f"{quote['ticker']:<8} {quote['exchange']:<12} {quote['currency']} "
+              f"{quote['price']} ({quote['change_percent']:.2f}%)")
+
+    # The exchange can also be forced for every ticker. Each call gets its own
+    # filename so the outputs do not overwrite each other.
+    service.run_quotes(stocks=["PETR4", "VALE3"], exchange="brazil",
+                       filename="trading_view_quotes_brazil.csv")
+    service.run_quotes(stocks=["AAPL", "JPM"], exchange="america",
+                       filename="trading_view_quotes_us.csv")
+
+
 def market_data_example():
     # Initialize the service with Market Data provider
     service = MarketDataProvider(
@@ -104,5 +133,6 @@ if __name__ == "__main__":
     fundamentus_example()
     investor_ten_example()
     trading_view_example()
+    trading_view_quotes_example()
     market_data_example()
     funds_explorer_example()
